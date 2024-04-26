@@ -15,3 +15,18 @@ export async function signInWithMagicLink(email: string) {
   });
   return result;
 }
+
+export async function signInWithEmailAndPassword(
+  email: string,
+  password: string
+) {
+  const supabase = createSupabaseServerActionClient();
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+  if (error) {
+    return error.message;
+  }
+  return;
+}
