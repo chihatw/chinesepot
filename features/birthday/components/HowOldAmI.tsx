@@ -1,11 +1,13 @@
 import { formatDistanceToNow } from 'date-fns';
-import { BIRTH_DAY } from '../constants';
+import { fetchLatestDeploymentTime } from '../services/server';
 
 type Props = {};
 
-const HowOldAmI = (props: Props) => {
-  const birthday = new Date(BIRTH_DAY * 1000);
-  formatDistanceToNow(birthday);
+const HowOldAmI = async (props: Props) => {
+  const ready = await fetchLatestDeploymentTime();
+
+  const birthday = new Date(ready);
+
   return (
     <div className='text-xs text-slate-400 text-center my-10'>
       {`since: ${formatDistanceToNow(birthday, { addSuffix: true })}`}
