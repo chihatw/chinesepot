@@ -7,7 +7,7 @@ const HowOldAmI = (props: Props) => {
   const birthday = new Date(BIRTH_DAY * 1000);
   formatDistanceToNow(birthday);
   return (
-    <div className='text-xs text-slate-400 text-center'>
+    <div className='text-xs text-slate-400 text-center my-20'>
       {`since: ${formatDistanceToNow(birthday, { addSuffix: true })}`}
     </div>
   );

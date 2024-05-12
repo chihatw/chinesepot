@@ -13,7 +13,7 @@ export default function RootLayout({
     <html lang='en'>
       <body
         className={cn(
-          'min-h-screen pb-40 grid grid-rows-[48px,1fr,auto] gap-10 bg-slate-200 text-gray-700 ',
+          'min-h-screen grid grid-rows-[48px,1fr,auto] gap-10 bg-slate-200 text-gray-700 ',
           fontSans.className
         )}
       >
