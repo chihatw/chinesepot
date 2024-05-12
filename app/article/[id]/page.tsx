@@ -37,7 +37,7 @@ const ArticlePage = async ({ params: { id } }: { params: { id: number } }) => {
   const sentences = data as unknown as Sentence[];
 
   return (
-    <div className='mx-auto w-full max-w-md space-y-4 pb-40 pt-10'>
+    <div className='mx-auto max-w-md grid gap-4'>
       <div className='text-2xl font-bold'>{article.title}</div>
       <div>
         {new Date(article.date).toLocaleDateString('ja-JP', {

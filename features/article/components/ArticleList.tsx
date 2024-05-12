@@ -20,7 +20,7 @@ const ArticleList = ({ articles }: { articles: Article[] }) => {
     await deleteArticle(id);
   };
   return (
-    <div className='grid gap-y-10 pb-40'>
+    <div className='grid gap-y-10'>
       {optimisticArticles.map((article) => (
         <div
           key={article.id}

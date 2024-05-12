@@ -23,7 +23,7 @@ const ArticleFormPage = async ({
     }
   }
   return (
-    <div className='mx-auto w-full max-w-lg space-y-10 pt-10'>
+    <div className='mx-auto max-w-lg grid gap-8'>
       <div className='text-4xl font-extrabold'>Article Form</div>
       <ArticleForm article={article} />
     </div>

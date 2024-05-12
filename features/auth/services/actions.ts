@@ -1,6 +1,7 @@
 'use server';
 
 import { createSupabaseServerActionClient } from '@/lib/supabase/actions';
+import { redirect } from 'next/navigation';
 import { PROJECT_URL } from '../constants';
 
 const isProduction = process.env.VERCEL_ENV === 'production';
@@ -29,4 +30,10 @@ export async function signInWithEmailAndPassword(
     return error.message;
   }
   return;
+}
+
+export async function logout() {
+  const supabase = createSupabaseServerActionClient();
+  await supabase.auth.signOut();
+  redirect('/login');
 }

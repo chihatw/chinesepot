@@ -7,11 +7,6 @@ import { Plus } from 'lucide-react';
 import Link from 'next/link';
 
 const ArticleListPage = async () => {
-  // const res = await fetchSupabase({
-  //   query: 'articles?select=*&order=date.desc&limit=3',
-  //   // cache: 'no-store',
-  // });
-  // const articles: Article[] = await res.json();
   const supabase = createSupabaseServerComponentClient();
 
   const { data } = await supabase
@@ -23,7 +18,7 @@ const ArticleListPage = async () => {
   const articles = data as unknown as Article[];
 
   return (
-    <div className='mx-auto w-full max-w-lg  space-y-10 pt-10'>
+    <div className='mx-auto max-w-lg grid gap-8 '>
       <div className='text-4xl font-extrabold'>Article List</div>
       <Link
         href={'/article/form'}

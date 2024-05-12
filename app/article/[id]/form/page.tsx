@@ -30,7 +30,7 @@ const ArticleSentenceFormPage = async ({
   const text = searchParams.text?.trim() || '';
 
   return (
-    <div className='mx-auto w-full max-w-md space-y-8 pb-40 pt-10'>
+    <div className='mx-auto max-w-md grid gap-8'>
       <div className='text-2xl font-bold'>{article.title}</div>
       <Link href={`/article/${article.id}`} className={buttonVariants()}>
         Back to Article

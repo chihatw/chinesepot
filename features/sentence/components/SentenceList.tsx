@@ -26,6 +26,7 @@ const SentenceList = ({
     deleteOptimisticSentences(sentenceId);
     await deleteSentence(sentenceId, articleId);
   };
+
   return (
     <div>
       <div className='space-y-4 '>
