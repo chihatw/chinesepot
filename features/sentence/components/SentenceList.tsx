@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Delete } from 'lucide-react';
 import { useOptimistic } from 'react';
 import { deleteSentence } from '../actions';
-import { Sentence } from '../schema';
+import { SentenceView } from '../schema';
 import SentenceLine from './SentenceLine';
 
 const SentenceList = ({
@@ -13,10 +13,10 @@ const SentenceList = ({
   sentences,
 }: {
   articleId: number;
-  sentences: Sentence[];
+  sentences: SentenceView[];
 }) => {
   const [optimisticSentences, deleteOptimisticSentences] = useOptimistic<
-    Sentence[],
+    SentenceView[],
     number
   >(sentences, (state, sentenceId) => {
     return state.filter((sentence) => sentence.sentence_id !== sentenceId);
@@ -42,7 +42,7 @@ const SentenceList = ({
                 <Button
                   size='icon'
                   variant='ghost'
-                  onClick={() => handleDelete(sentence.sentence_id)}
+                  onClick={() => handleDelete(sentence.sentence_id!)}
                 >
                   <Delete />
                 </Button>

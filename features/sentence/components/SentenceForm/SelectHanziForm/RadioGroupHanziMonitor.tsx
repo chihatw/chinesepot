@@ -15,9 +15,9 @@ const RadioGroupHanziMonitor = ({
         <RadioGroupItem value={String(hanzi.id)} />
         <div className='grid place-items-center '>
           <PinyinHanzi
-            form={hanzi.form}
-            pinyinStr={hanzi.consonant + hanzi.vowel + hanzi.tone}
-            count={hanzi.count}
+            form={hanzi.form!}
+            pinyinStr={hanzi.consonant! + hanzi.vowel! + hanzi.tone}
+            count={hanzi.count!}
           />
         </div>
       </div>

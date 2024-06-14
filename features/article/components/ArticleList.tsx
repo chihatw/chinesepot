@@ -28,7 +28,7 @@ const ArticleList = ({ articles }: { articles: Article[] }) => {
         >
           <div className='space-x-1 text-sm font-extralight text-gray-500'>
             <span>
-              {new Date(article.date).toLocaleDateString('ja-JP', {
+              {new Date(article.date!).toLocaleDateString('ja-JP', {
                 timeZone: 'Asia/Tokyo',
               })}
             </span>
@@ -46,7 +46,7 @@ const ArticleList = ({ articles }: { articles: Article[] }) => {
             <Button
               variant={'ghost'}
               size='icon'
-              onClick={() => handleSubmit(article.id)}
+              onClick={() => handleSubmit(article.id!)}
             >
               <Trash2 />
             </Button>

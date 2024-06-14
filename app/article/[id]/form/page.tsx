@@ -1,8 +1,7 @@
 import { buttonVariants } from '@/components/ui/button';
-import { Article } from '@/features/article/schema';
-import { Hanzi_latest_sentence_count } from '@/features/hanzi/schema';
+import { fetchArticle } from '@/features/article/services/server';
+import { fetchHanziLatestSentenceCounts } from '@/features/hanzi/services/services';
 import SentenceForm from '@/features/sentence/components/SentenceForm';
-import { fetchSupabase } from '@/lib/supabase/utils';
 
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -16,12 +15,7 @@ const ArticleSentenceFormPage = async ({
 }) => {
   if (!id) redirect('/article/list');
 
-  // params から article 取得
-  const res = await fetchSupabase({
-    query: `articles?select=*&id=eq.${id}`,
-  });
-  const articles: Article[] = await res.json();
-  const article = articles[0];
+  const article = await fetchArticle(id);
   if (!article || !article.id) {
     redirect('/article/list');
   }
@@ -49,23 +43,6 @@ const SentenceFormWrapper = async ({
   text: string;
   articleId: number;
 }) => {
-  const array = text.split('').filter(Boolean);
-  const url = `hanzi_latest_sentence_counts?select=*&form=in.${encodeURIComponent(
-    `(${array.join(',')})`
-  )}`;
-  const res = await fetchSupabase({ query: url });
-  const data: any[] = await res.json();
-
-  const hanzis: Hanzi_latest_sentence_count[] = data
-    ? data.map((h) => ({
-        ...h,
-        id: h.id!,
-        count: h.count!,
-        form: h.form!,
-        consonant: h.consonant!,
-        vowel: h.vowel!,
-        tone: h.tone!,
-      }))
-    : [];
+  const hanzis = await fetchHanziLatestSentenceCounts(text);
   return <SentenceForm text={text} hanzis={hanzis} articleId={articleId} />;
 };

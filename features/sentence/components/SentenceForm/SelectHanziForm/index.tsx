@@ -32,7 +32,7 @@ const SelectHanziForm = ({
             >
               <div className='grid gap-2'>
                 {hanzis
-                  .sort((a, b) => b.count - a.count)
+                  .sort((a, b) => b.count! - a.count!)
                   .map((hanzi, index) => (
                     <RadioGroupHanziMonitor hanzi={hanzi} key={index} />
                   ))}

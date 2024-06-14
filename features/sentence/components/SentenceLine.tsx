@@ -1,7 +1,11 @@
 import PinyinHanzi from '@/features/hanzi/components/PinyinHanzi';
-import { Sentence } from '../schema';
+import { SentenceView } from '../schema';
 
-const SentenceLine = ({ sentence }: { sentence: Sentence }) => {
+const SentenceLine = ({
+  sentence,
+}: {
+  sentence: Pick<SentenceView, 'text' | 'pinyin' | 'sentence_id'>;
+}) => {
   const forms = sentence.text ? sentence.text.split('') : [];
   const pinyins = sentence.pinyin ? sentence.pinyin.split(' ') : [];
   return (

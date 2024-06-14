@@ -1,7 +1,7 @@
 import { buttonVariants } from '@/components/ui/button';
 import { Article } from '@/features/article/schema';
+import { fetchSentences } from '@/features/article/services/server';
 import SentenceList from '@/features/sentence/components/SentenceList';
-import { Sentence } from '@/features/sentence/schema';
 import { createSupabaseServerComponentClient } from '@/lib/supabase/actions';
 
 import Link from 'next/link';
@@ -10,13 +10,6 @@ import { redirect } from 'next/navigation';
 const ArticlePage = async ({ params: { id } }: { params: { id: number } }) => {
   if (!id) redirect('/article/list');
 
-  // const res = await fetchSupabase({
-  //   query: `article_sentence_text_pinyins?select=*&id=eq.${id}&order=index.asc`,
-  //   // cache: 'no-store',
-  // });
-
-  // const data = await res.json();
-
   const supabase = createSupabaseServerComponentClient();
   const { data } = await supabase
     .from('article_sentence_text_pinyins')
@@ -24,23 +17,23 @@ const ArticlePage = async ({ params: { id } }: { params: { id: number } }) => {
     .eq('id', id)
     .order('index');
 
+  const sentences = await fetchSentences(id);
+
   if (!data || !data.length) {
     redirect('/article/list');
   }
 
-  const article = data[0] as unknown as Article;
+  const article = data[0] as Article;
 
   if (!article || !article.id) {
     redirect('/article/list');
   }
 
-  const sentences = data as unknown as Sentence[];
-
   return (
     <div className='mx-auto max-w-md grid gap-4'>
       <div className='text-2xl font-bold'>{article.title}</div>
       <div>
-        {new Date(article.date).toLocaleDateString('ja-JP', {
+        {new Date(article.date!).toLocaleDateString('ja-JP', {
           timeZone: 'Asia/Tokyo',
         })}
       </div>

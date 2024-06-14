@@ -27,7 +27,7 @@ const ArticleForm = ({ article }: { article: Article | null }) => {
   const [isPending, startTransition] = useTransition();
   const [value, setValue] = useState<FormValue>({
     title: article?.title || '',
-    date: article ? new Date(article.date) : new Date(),
+    date: article ? new Date(article.date!) : new Date(),
     isValid: !!article?.title,
     error: '',
   });

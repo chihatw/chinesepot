@@ -24,13 +24,14 @@ export interface Hanzi_db_raw {
 }
 
 export interface Hanzi_latest_sentence_count {
-  id: number;
-  form: string;
-  consonant: string;
-  vowel: string;
-  tone: string;
+  id: number | null;
+  form: string | null;
+  consonant: string | null;
+  vowel: string | null;
+  tone: string | null;
   sentence_id: number | null;
   text: string | null;
   pinyin: string | null;
-  count: number;
+  count: number | null;
+  created_at: Date | null;
 }

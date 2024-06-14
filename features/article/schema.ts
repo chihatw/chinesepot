@@ -1,8 +1,8 @@
 export interface Article {
-  id: number;
-  title: string;
-  date: Date;
-  created_at: Date;
+  id: number | null;
+  title: string | null;
+  date: Date | null;
+  created_at: Date | null;
 }
 
 export interface Article_db {

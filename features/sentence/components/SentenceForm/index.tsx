@@ -33,9 +33,9 @@ const SentenceForm = ({
     const selectedHanzis = forms.map(
       (form) =>
         hanzis
-          .filter((h) => h.form === form)
-          ?.sort((a, b) => b.count - a.count)[0]
-          ?.id.toString() || '' // Radio Group の値に合わせて string に変換
+          .filter((h) => h.form! === form)
+          ?.sort((a, b) => b.count! - a.count!)[0]
+          ?.id!.toString() || '' // Radio Group の値に合わせて string に変換
     );
     setValue({ selectedHanzis, error: '' });
   }, [forms, hanzis]);

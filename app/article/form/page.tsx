@@ -1,7 +1,6 @@
 import ArticleForm from '@/features/article/components/ArticleForm';
 import { Article } from '@/features/article/schema';
-import { fetchSupabase } from '@/lib/supabase/utils';
-import { redirect } from 'next/navigation';
+import { fetchArticle } from '@/features/article/services/server';
 
 const ArticleFormPage = async ({
   searchParams: { id },
@@ -13,13 +12,9 @@ const ArticleFormPage = async ({
   let article: null | Article = null;
 
   if (id) {
-    const res = await fetchSupabase({
-      query: `articles?select=*&id=eq.${id}`,
-    });
-    const articles: Article[] = await res.json();
-    article = articles[0];
-    if (!article || !article.id) {
-      redirect('/article/list');
+    const result = await fetchArticle(id);
+    if (result) {
+      article = result;
     }
   }
   return (

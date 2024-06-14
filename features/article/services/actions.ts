@@ -27,13 +27,13 @@ export const updateArticle = async (
   const { error } = await supabase
     .from('articles')
     .update({
-      title: article.title,
+      title: article.title!,
       date: format(
-        article.date.toLocaleDateString('en-US', { timeZone: 'Asia/Tokyo' }),
+        article.date!.toLocaleDateString('en-US', { timeZone: 'Asia/Tokyo' }),
         'yyyy-MM-dd'
       ),
     })
-    .eq('id', article.id);
+    .eq('id', article.id!);
 
   if (error) {
     return { error: error.message };
