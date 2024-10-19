@@ -43,7 +43,12 @@ const InputTextForm = ({ text }: { text: string }) => {
 
   return (
     <form ref={form}>
-      <Input className='bg-white' onChange={handleChangeText} name='text' />
+      <Input
+        className='bg-white'
+        onChange={handleChangeText}
+        name='text'
+        autoFocus
+      />
     </form>
   );
 };

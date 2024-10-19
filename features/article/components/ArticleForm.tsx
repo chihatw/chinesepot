@@ -75,6 +75,7 @@ const ArticleForm = ({ article }: { article: Article | null }) => {
   return (
     <div className='grid gap-10'>
       <Input
+        autoFocus
         className='bg-white'
         placeholder='title'
         value={value.title}
