@@ -7,37 +7,22 @@ import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { signInWithEmailAndPassword } from '../services/actions';
 
-type FormProps = {
-  email: string;
-  password: string;
-  errMsg: string;
-};
-
-const INITIAL_STATE: FormProps = {
-  email: '',
-  password: '',
-  errMsg: '',
-};
-
-// バリデーション関数を分離
-function isFormValid(email: string, password: string) {
-  return isValidEmail(email) && password.length >= 6;
-}
-
-const EmailLoginForm = () => {
+function EmailLoginForm() {
   const router = useRouter();
-  const [value, setValue] = useState(INITIAL_STATE);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errMsg, setErrMsg] = useState('');
   const [isPending, startTransition] = useTransition();
 
-  const action = async () => {
-    startTransition(async () => {
-      const errMsg = await signInWithEmailAndPassword(
-        value.email,
-        value.password
-      );
+  const isFormValid = isValidEmail(email) && password.length >= 6;
 
-      if (errMsg) {
-        setValue((prev) => ({ ...prev, errMsg }));
+  const action = async () => {
+    if (!isFormValid || isPending) return;
+    setErrMsg('');
+    startTransition(async () => {
+      const err = await signInWithEmailAndPassword(email, password);
+      if (err) {
+        setErrMsg(err);
         return;
       }
       router.push('/');
@@ -45,43 +30,33 @@ const EmailLoginForm = () => {
   };
 
   return (
-    <div className='grid max-w-sm mx-auto gap-4 pt-20'>
+    <div className='grid gap-4'>
       <Input
         type='email'
         placeholder='Email'
-        value={value.email}
-        onChange={(e) =>
-          setValue((prev) => ({
-            ...prev,
-            email: e.target.value,
-            errMsg: '',
-          }))
-        }
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         autoComplete='current-email'
+        disabled={isPending}
       />
       <Input
         type='password'
         placeholder='Password'
-        value={value.password}
-        onChange={(e) =>
-          setValue((prev) => ({
-            ...prev,
-            password: e.target.value,
-            errMsg: '',
-          }))
-        }
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
         autoComplete='current-password'
+        disabled={isPending}
       />
       <SubmitServerActionButton
-        action={action}
         isPending={isPending}
-        disabled={!isFormValid(value.email, value.password)}
-        errMsg={value.errMsg}
+        disabled={!isFormValid}
+        errMsg={errMsg}
+        action={action}
       >
         Login
       </SubmitServerActionButton>
     </div>
   );
-};
+}
 
 export default EmailLoginForm;

@@ -14,7 +14,7 @@ export default async function Home() {
   const article = sentences[0] as Article;
 
   return (
-    <main className='mx-auto max-w-md grid gap-4'>
+    <main className='mx-auto max-w-md grid gap-4 w-full pt-10'>
       <div className='text-2xl font-bold'>{article?.title}</div>
       <div>
         {new Date(article.date!).toLocaleDateString('ja-JP', {
