@@ -7,8 +7,6 @@ import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { signInWithEmailAndPassword } from '../services/actions';
 
-type Props = {};
-
 type FormProps = {
   email: string;
   password: string;
@@ -21,7 +19,12 @@ const INITIAL_STATE: FormProps = {
   errMsg: '',
 };
 
-const EmailLoginForm = (props: Props) => {
+// バリデーション関数を分離
+function isFormValid(email: string, password: string) {
+  return isValidEmail(email) && password.length >= 6;
+}
+
+const EmailLoginForm = () => {
   const router = useRouter();
   const [value, setValue] = useState(INITIAL_STATE);
   const [isPending, startTransition] = useTransition();
@@ -54,7 +57,7 @@ const EmailLoginForm = (props: Props) => {
             errMsg: '',
           }))
         }
-        autoComplete='off'
+        autoComplete='current-email'
       />
       <Input
         type='password'
@@ -67,12 +70,12 @@ const EmailLoginForm = (props: Props) => {
             errMsg: '',
           }))
         }
-        autoComplete='off'
+        autoComplete='current-password'
       />
       <SubmitServerActionButton
         action={action}
         isPending={isPending}
-        disabled={!isValidEmail(value.email) || value.password.length < 6}
+        disabled={!isFormValid(value.email, value.password)}
         errMsg={value.errMsg}
       >
         Login
