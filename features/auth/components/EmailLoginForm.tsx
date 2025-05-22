@@ -1,8 +1,9 @@
 'use client';
 
-import SubmitServerActionButton from '@/components/SubmitServerActionButton';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { isValidEmail } from '@/utils';
+import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { signInWithEmailAndPassword } from '../services/actions';
@@ -30,7 +31,7 @@ function EmailLoginForm() {
   };
 
   return (
-    <div className='grid gap-4'>
+    <form action={action} className='grid gap-4'>
       <Input
         type='email'
         placeholder='Email'
@@ -47,15 +48,16 @@ function EmailLoginForm() {
         autoComplete='current-password'
         disabled={isPending}
       />
-      <SubmitServerActionButton
-        isPending={isPending}
-        disabled={!isFormValid}
-        errMsg={errMsg}
-        action={action}
+      {errMsg && <div className='text-red-500 text-sm'>{errMsg}</div>}
+      <Button
+        type='submit'
+        disabled={isPending || !isFormValid}
+        className='flex items-center gap-x-0.5'
       >
         Login
-      </SubmitServerActionButton>
-    </div>
+        {isPending ? <Loader2 className='animate-spin' /> : null}
+      </Button>
+    </form>
   );
 }
 

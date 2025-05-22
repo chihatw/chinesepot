@@ -1,3 +1,4 @@
+import Header from '@/components/header';
 import { buttonVariants } from '@/components/ui/button';
 import { Article } from '@/features/article/schema';
 import { fetchLatestSentences } from '@/features/article/services/server';
@@ -14,17 +15,22 @@ export default async function Home() {
   const article = sentences[0] as Article;
 
   return (
-    <main className='mx-auto max-w-md grid gap-4 w-full pt-10'>
-      <div className='text-2xl font-bold'>{article?.title}</div>
-      <div>
-        {new Date(article.date!).toLocaleDateString('ja-JP', {
-          timeZone: 'Asia/Tokyo',
-        })}
-      </div>
-      <Link href={`/article/${article.id}/form`} className={buttonVariants()}>
-        Create new sentence
-      </Link>
-      <SentenceList sentences={sentences} articleId={article.id!} />
-    </main>
+    <div>
+      <nav>
+        <Header />
+      </nav>
+      <main className='mx-auto max-w-md grid gap-4 w-full pt-10'>
+        <div className='text-2xl font-bold'>{article?.title}</div>
+        <div>
+          {new Date(article.date!).toLocaleDateString('ja-JP', {
+            timeZone: 'Asia/Tokyo',
+          })}
+        </div>
+        <Link href={`/article/${article.id}/form`} className={buttonVariants()}>
+          Create new sentence
+        </Link>
+        <SentenceList sentences={sentences} articleId={article.id!} />
+      </main>
+    </div>
   );
 }

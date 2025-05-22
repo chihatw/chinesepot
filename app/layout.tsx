@@ -1,4 +1,3 @@
-import Header from '@/components/header';
 import './globals.css';
 
 export default function RootLayout({
@@ -10,7 +9,6 @@ export default function RootLayout({
     <html lang='en'>
       <body>
         <div className='bg-slate-200 min-h-screen flex flex-col'>
-          <Header />
           {children}
         </div>
       </body>
