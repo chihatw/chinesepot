@@ -1,10 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  logging: {
-    fetches: {
-      fullUrl: false,
-    },
-  },
+  /* config options here */
 };
 
 export default nextConfig;
