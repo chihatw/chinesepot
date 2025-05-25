@@ -24,7 +24,7 @@ const ArticleList = ({ articles }: { articles: Article[] }) => {
       {optimisticArticles.map((article) => (
         <div
           key={article.id}
-          className='space-y-2 rounded bg-white p-5 pt-3 shadow'
+          className='space-y-2 rounded bg-white p-5 pt-3 shadow-sm'
         >
           <div className='space-x-1 text-sm font-extralight text-gray-500'>
             <span>
@@ -33,7 +33,7 @@ const ArticleList = ({ articles }: { articles: Article[] }) => {
               })}
             </span>
           </div>
-          <div className='grid grid-cols-[1fr,auto,auto] items-center gap-2'>
+          <div className='grid grid-cols-[1fr_auto_auto] items-center gap-2'>
             <Link href={`/article/${article.id}`}>
               <div className='space-y-2 '>
                 <div>{article.title}</div>

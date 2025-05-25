@@ -35,7 +35,7 @@ const SentenceList = ({
             return (
               <div
                 key={index}
-                className='grid grid-cols-[24px,1fr,auto,auto] items-center gap-2'
+                className='grid grid-cols-[24px_1fr_auto_auto] items-center gap-2'
               >
                 <div className='text-xs'>{index + 1}</div>
                 <SentenceLine sentence={sentence} />

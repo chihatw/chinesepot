@@ -49,7 +49,7 @@ const HanziList = ({ pinyinFilter }: { pinyinFilter: PinyinFilter }) => {
         return (
           <div
             key={index}
-            className='grid grid-cols-[60px,1fr] items-center gap-2'
+            className='grid grid-cols-[60px_1fr] items-center gap-2'
           >
             <div className='flex'>
               <PinyinBadge pinyin={buildPinyin(item.consonant + item.vowel)} />

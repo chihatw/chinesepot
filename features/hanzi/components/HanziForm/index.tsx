@@ -82,8 +82,8 @@ const HanziForm = ({
     });
   };
   return (
-    <div className='grid h-[calc(100vh-200px)] grid-rows-[auto,auto,auto,auto,1fr] space-y-4'>
-      <div className='grid grid-cols-[120px,150px,1fr,auto] items-center gap-2'>
+    <div className='grid h-[calc(100vh-200px)] grid-rows-[auto_auto_auto_auto_1fr] space-y-4'>
+      <div className='grid grid-cols-[120px_150px_1fr_auto] items-center gap-2'>
         <Input
           className=' bg-white'
           value={input}

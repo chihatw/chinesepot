@@ -17,7 +17,7 @@ const Header = async () => {
   } = await supabase.auth.getUser();
 
   return (
-    <nav className='grid h-12 shadow'>
+    <nav className='grid h-12 shadow-sm'>
       <div className='container flex w-full items-center justify-between mx-auto'>
         <div className='flex gap-x-4 items-center'>
           <Link

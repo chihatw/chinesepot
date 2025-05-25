@@ -11,7 +11,7 @@ const RadioGroupHanziMonitor = ({
 }) => {
   return (
     <div className='flex items-center gap-2 '>
-      <div className='grid grid-cols-[auto,36px] items-center gap-2 rounded bg-white px-4 py-2 h-[54px]'>
+      <div className='grid grid-cols-[auto_36px] items-center gap-2 rounded bg-white px-4 py-2 h-[54px]'>
         <RadioGroupItem value={String(hanzi.id)} />
         <div className='grid place-items-center '>
           <PinyinHanzi

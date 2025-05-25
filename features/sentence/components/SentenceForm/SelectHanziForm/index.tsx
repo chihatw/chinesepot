@@ -23,7 +23,7 @@ const SelectHanziForm = ({
   return (
     <Card className='bg-white/30 pt-4'>
       <CardContent className='-mb-4 -ml-2 '>
-        <div className='grid grid-cols-[auto,1fr] items-center gap-4'>
+        <div className='grid grid-cols-[auto_1fr] items-center gap-4'>
           <div className='relative -top-1'>{form}</div>
           <div className='space-y-2'>
             <RadioGroup
