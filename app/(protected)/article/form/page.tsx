@@ -2,11 +2,17 @@ import ArticleForm from '@/features/article/components/ArticleForm';
 import { Article } from '@/features/article/schema';
 import { fetchArticle } from '@/features/article/services/server';
 
-const ArticleFormPage = async ({
-  searchParams: { id },
-}: {
-  searchParams: { id?: number };
-}) => {
+const ArticleFormPage = async (
+  props: {
+    searchParams: Promise<{ id?: number }>;
+  }
+) => {
+  const searchParams = await props.searchParams;
+
+  const {
+    id
+  } = searchParams;
+
   // article は null の時もある
   // create の時は null, update の時 Article
   let article: null | Article = null;

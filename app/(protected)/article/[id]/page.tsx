@@ -7,7 +7,13 @@ import { createSupabaseServerComponentClient } from '@/lib/supabase/actions';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-const ArticlePage = async ({ params: { id } }: { params: { id: number } }) => {
+const ArticlePage = async (props: { params: Promise<{ id: number }> }) => {
+  const params = await props.params;
+
+  const {
+    id
+  } = params;
+
   if (!id) redirect('/article/list');
 
   const supabase = createSupabaseServerComponentClient();

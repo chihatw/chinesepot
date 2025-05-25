@@ -6,13 +6,19 @@ import SentenceForm from '@/features/sentence/components/SentenceForm';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-const ArticleSentenceFormPage = async ({
-  params: { id },
-  searchParams,
-}: {
-  params: { id: number }; // url 内部の "/[id]/" の部分
-  searchParams: { text?: string }; // url 後ろの "?text=..."の部分
-}) => {
+const ArticleSentenceFormPage = async (
+  props: {
+    params: Promise<{ id: number }>; // url 内部の "/[id]/" の部分
+    searchParams: Promise<{ text?: string }>; // url 後ろの "?text=..."の部分
+  }
+) => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+
+  const {
+    id
+  } = params;
+
   if (!id) redirect('/article/list');
 
   const article = await fetchArticle(id);

@@ -1,12 +1,12 @@
 import { Database } from '@/types/supabase';
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 
-import { cookies } from 'next/headers';
+import { cookies, type UnsafeUnwrappedCookies } from 'next/headers';
 
 // server action は get, set, remove
 // server component は get のみ
 export function createSupabaseServerActionClient(serverComponent = false) {
-  const cookieStore = cookies();
+  const cookieStore = (cookies() as unknown as UnsafeUnwrappedCookies);
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
