@@ -2,7 +2,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { Article } from '@/features/article/schema';
 import { fetchSentences } from '@/features/article/services/server';
 import SentenceList from '@/features/sentence/components/SentenceList';
-import { createSupabaseServerComponentClient } from '@/lib/supabase/actions';
+import { createClient } from '@/utils/supabase/server';
 
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -14,7 +14,7 @@ const ArticlePage = async (props: { params: Promise<{ id: number }> }) => {
 
   if (!id) redirect('/article/list');
 
-  const supabase = await createSupabaseServerComponentClient();
+  const supabase = await createClient();
   const { data } = await supabase
     .from('article_sentence_text_pinyins')
     .select('*')

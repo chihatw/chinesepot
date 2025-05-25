@@ -1,13 +1,13 @@
 'use server';
 
-import { createSupabaseServerActionClient } from '@/lib/supabase/actions';
+import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 
 export const deleteSentence = async (
   _id: number,
   articleId: number
 ): Promise<void> => {
-  const supabase = await createSupabaseServerActionClient();
+  const supabase = await createClient();
   const { error } = await supabase.from('sentences').delete().eq('id', _id);
   if (error) {
     console.error(error.message);
@@ -24,7 +24,7 @@ export const addSentence = async (
   _hanzi_ids: number[],
   _offsets: number[]
 ): Promise<{ data?: number; error?: string }> => {
-  const supabase = await createSupabaseServerActionClient();
+  const supabase = await createClient();
   const { data, error } = await supabase.rpc('insert_sentence', {
     _article_id,
     _hanzi_ids,

@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
 import HeaderLogoutButton from '@/features/auth/components/HeaderLogoutButton';
-import { createSupabaseServerComponentClient } from '@/lib/supabase/actions';
+
+import { createClient } from '@/utils/supabase/server';
 import { DoorClosed, Home } from 'lucide-react';
 import { buttonVariants } from './ui/button';
 
@@ -10,7 +11,7 @@ const LINKS: { url: string; label: string }[] = [
 ];
 
 const Header = async () => {
-  const supabase = await createSupabaseServerComponentClient();
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

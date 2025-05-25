@@ -1,13 +1,13 @@
 import { buttonVariants } from '@/components/ui/button';
 import ArticleList from '@/features/article/components/ArticleList';
 import { Article } from '@/features/article/schema';
+import { createClient } from '@/utils/supabase/server';
 
-import { createSupabaseServerComponentClient } from '@/lib/supabase/actions';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 
 const ArticleListPage = async () => {
-  const supabase = await createSupabaseServerComponentClient();
+  const supabase = await createClient();
 
   const { data } = await supabase
     .from('articles')

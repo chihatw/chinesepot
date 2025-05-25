@@ -1,6 +1,6 @@
 'use server';
 
-import { createSupabaseServerActionClient } from '@/lib/supabase/actions';
+import { createClient } from '@/utils/supabase/server';
 import { format } from 'date-fns';
 import { revalidatePath } from 'next/cache';
 import { Article, Article_db } from '../schema';
@@ -8,7 +8,7 @@ import { Article, Article_db } from '../schema';
 export const addArticle = async (
   article: Article_db
 ): Promise<{ error?: string }> => {
-  const supabase = await createSupabaseServerActionClient();
+  const supabase = await createClient();
   const { error } = await supabase
     .from('articles')
     .insert({ date: article.date, title: article.title });
@@ -17,13 +17,15 @@ export const addArticle = async (
   }
   revalidatePath('/');
   revalidatePath('/article/list');
+  // debug
+  console.log('Article added:', article);
   return {};
 };
 
 export const updateArticle = async (
   article: Article
 ): Promise<{ error?: string }> => {
-  const supabase = await createSupabaseServerActionClient();
+  const supabase = await createClient();
   const { error } = await supabase
     .from('articles')
     .update({
@@ -48,7 +50,7 @@ export const updateArticle = async (
 export const deleteArticle = async (
   _id: number
 ): Promise<{ error?: string }> => {
-  const supabase = await createSupabaseServerActionClient();
+  const supabase = await createClient();
   const { error } = await supabase.from('articles').delete().eq('id', _id);
   if (error) {
     return { error: error.message };
