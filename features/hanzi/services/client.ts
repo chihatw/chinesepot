@@ -1,7 +1,6 @@
 import { Hanzi, Hanzi_db_raw } from '@/features/hanzi/schema';
 import { PinyinFilter } from '@/features/pinyin/schema';
-
-import { createSupabaseClientComponentClient } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/client';
 
 export const getHanzisByPinyinFilter = async (
   filter: PinyinFilter
@@ -14,7 +13,7 @@ export const getHanzisByPinyinFilter = async (
   let group: undefined | string = undefined;
 
   let hanzis_raw: Hanzi_db_raw[] = [];
-  const supabase = createSupabaseClientComponentClient();
+  const supabase = createClient();
 
   const hasVowels = !!filter.vowels.length;
   const hasConsonants = !!filter.consonants.length;

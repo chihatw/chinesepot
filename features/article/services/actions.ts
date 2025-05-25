@@ -17,8 +17,6 @@ export const addArticle = async (
   }
   revalidatePath('/');
   revalidatePath('/article/list');
-  // debug
-  console.log('Article added:', article);
   return {};
 };
 
