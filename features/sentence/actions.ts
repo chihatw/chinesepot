@@ -7,7 +7,7 @@ export const deleteSentence = async (
   _id: number,
   articleId: number
 ): Promise<void> => {
-  const supabase = createSupabaseServerActionClient();
+  const supabase = await createSupabaseServerActionClient();
   const { error } = await supabase.from('sentences').delete().eq('id', _id);
   if (error) {
     console.error(error.message);
@@ -24,7 +24,7 @@ export const addSentence = async (
   _hanzi_ids: number[],
   _offsets: number[]
 ): Promise<{ data?: number; error?: string }> => {
-  const supabase = createSupabaseServerActionClient();
+  const supabase = await createSupabaseServerActionClient();
   const { data, error } = await supabase.rpc('insert_sentence', {
     _article_id,
     _hanzi_ids,

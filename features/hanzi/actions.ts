@@ -8,7 +8,7 @@ export const addHanzi = async (
   hanzi: Hanzi_insert,
   articleId: number
 ): Promise<{ data?: number; error?: string }> => {
-  const supabase = createSupabaseServerActionClient();
+  const supabase = await createSupabaseServerActionClient();
   const { data, error } = await supabase.rpc('insert_hanzi', {
     _form: hanzi.form,
     _consonant: hanzi.consonant,

@@ -10,13 +10,11 @@ import { redirect } from 'next/navigation';
 const ArticlePage = async (props: { params: Promise<{ id: number }> }) => {
   const params = await props.params;
 
-  const {
-    id
-  } = params;
+  const { id } = params;
 
   if (!id) redirect('/article/list');
 
-  const supabase = createSupabaseServerComponentClient();
+  const supabase = await createSupabaseServerComponentClient();
   const { data } = await supabase
     .from('article_sentence_text_pinyins')
     .select('*')

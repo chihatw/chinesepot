@@ -10,7 +10,7 @@ const LINKS: { url: string; label: string }[] = [
 ];
 
 const Header = async () => {
-  const supabase = createSupabaseServerComponentClient();
+  const supabase = await createSupabaseServerComponentClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

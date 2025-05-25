@@ -7,7 +7,7 @@ import { Plus } from 'lucide-react';
 import Link from 'next/link';
 
 const ArticleListPage = async () => {
-  const supabase = createSupabaseServerComponentClient();
+  const supabase = await createSupabaseServerComponentClient();
 
   const { data } = await supabase
     .from('articles')

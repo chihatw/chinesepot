@@ -8,7 +8,7 @@ import { Article, Article_db } from '../schema';
 export const addArticle = async (
   article: Article_db
 ): Promise<{ error?: string }> => {
-  const supabase = createSupabaseServerActionClient();
+  const supabase = await createSupabaseServerActionClient();
   const { error } = await supabase
     .from('articles')
     .insert({ date: article.date, title: article.title });
@@ -23,7 +23,7 @@ export const addArticle = async (
 export const updateArticle = async (
   article: Article
 ): Promise<{ error?: string }> => {
-  const supabase = createSupabaseServerActionClient();
+  const supabase = await createSupabaseServerActionClient();
   const { error } = await supabase
     .from('articles')
     .update({
@@ -48,7 +48,7 @@ export const updateArticle = async (
 export const deleteArticle = async (
   _id: number
 ): Promise<{ error?: string }> => {
-  const supabase = createSupabaseServerActionClient();
+  const supabase = await createSupabaseServerActionClient();
   const { error } = await supabase.from('articles').delete().eq('id', _id);
   if (error) {
     return { error: error.message };

@@ -5,7 +5,7 @@ export async function fetchHanziLatestSentenceCounts(
   text: string
 ): Promise<Hanzi_latest_sentence_count[]> {
   const array = text.split('').filter(Boolean);
-  const supabase = createSupabaseServerComponentClient();
+  const supabase = await createSupabaseServerComponentClient();
   const { data, error } = await supabase
     .from('hanzi_latest_sentence_counts')
     .select()
