@@ -20,7 +20,7 @@ const HanziFormDialog = ({
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button
           size='sm'
           variant='ghost'

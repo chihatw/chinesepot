@@ -7,23 +7,21 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 const Page = async (props: {
-  params: Promise<{ id: number }>; // url 内部の "/[id]/" の部分
-  searchParams: Promise<{ text?: string }>; // url 後ろの "?text=..."の部分
+  searchParams: Promise<{ text?: string; articleId?: number }>; // url 後ろの "?text=..."の部分
 }) => {
   const searchParams = await props.searchParams;
-  const params = await props.params;
 
-  const { id } = params;
+  const { articleId, text: rawText } = searchParams;
 
-  if (!id) redirect('/articles');
+  if (!articleId) redirect('/articles');
 
-  const article = await fetchArticle(id);
+  const article = await fetchArticle(articleId);
   if (!article || !article.id) {
     redirect('/articles');
   }
 
   // input の値は searchParams で保持 '？text='
-  const text = searchParams.text?.trim() || '';
+  const text = rawText?.trim() || '';
 
   return (
     <div className='mx-auto max-w-md grid gap-8'>

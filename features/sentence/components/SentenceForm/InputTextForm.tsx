@@ -2,7 +2,13 @@ import { Input } from '@/components/ui/input';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
-const InputTextForm = ({ text }: { text: string }) => {
+const InputTextForm = ({
+  text,
+  articleId,
+}: {
+  text: string;
+  articleId: number;
+}) => {
   const router = useRouter();
   const pathname = usePathname();
   const form = useRef<HTMLFormElement>(null);
@@ -37,7 +43,8 @@ const InputTextForm = ({ text }: { text: string }) => {
     if (trimed === text) return;
 
     // 違う場合、searchParams を変更する
-    const url = pathname + (trimed ? `?text=${trimed}` : '');
+    const url =
+      pathname + (trimed ? `?text=${trimed}&articleId=${articleId}` : '');
     router.push(url);
   };
 

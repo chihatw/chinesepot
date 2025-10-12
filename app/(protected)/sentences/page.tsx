@@ -45,7 +45,10 @@ const Page = async (props: {
           timeZone: 'Asia/Tokyo',
         })}
       </div>
-      <Link href={`/articles/${article.id}/edit`} className={buttonVariants()}>
+      <Link
+        href={`/sentences/new?articleId=${article.id}`}
+        className={buttonVariants()}
+      >
         Create new sentence
       </Link>
       <SentenceList sentences={sentences} articleId={article.id} />

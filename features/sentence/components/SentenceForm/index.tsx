@@ -68,7 +68,7 @@ const SentenceForm = ({
 
   return (
     <div className='relative grid gap-4'>
-      <InputTextForm text={text} />
+      <InputTextForm text={text} articleId={articleId} />
       <div className='space-y-4'>
         {forms.map((form, offset) => (
           <SelectHanziForm
