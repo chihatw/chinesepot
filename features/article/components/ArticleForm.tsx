@@ -48,7 +48,7 @@ const ArticleForm = ({ article }: { article: Article | null }) => {
         return;
       }
       // エラーがなければ、リストに戻る
-      router.push('/article/list');
+      router.push('/articles/list');
     });
   };
 
@@ -64,7 +64,7 @@ const ArticleForm = ({ article }: { article: Article | null }) => {
         return;
       }
       // エラーがなければ、リストに戻る
-      router.push('/article/list');
+      router.push('/articles/list');
     });
   };
 
@@ -114,8 +114,9 @@ const DatePicker = ({
 }) => {
   return (
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger asChild>
         <Button
+          type='button'
           variant={'outline'}
           className={'w-full justify-start bg-white text-left font-normal'}
         >

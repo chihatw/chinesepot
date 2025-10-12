@@ -12,7 +12,7 @@ const ArticlePage = async (props: { params: Promise<{ id: number }> }) => {
 
   const { id } = params;
 
-  if (!id) redirect('/article/list');
+  if (!id) redirect('/articles/list');
 
   const supabase = await createClient();
   const { data } = await supabase
@@ -24,13 +24,13 @@ const ArticlePage = async (props: { params: Promise<{ id: number }> }) => {
   const sentences = await fetchSentences(id);
 
   if (!data || !data.length) {
-    redirect('/article/list');
+    redirect('/articles/list');
   }
 
   const article = data[0] as Article;
 
   if (!article || !article.id) {
-    redirect('/article/list');
+    redirect('/articles/list');
   }
 
   return (
@@ -41,7 +41,7 @@ const ArticlePage = async (props: { params: Promise<{ id: number }> }) => {
           timeZone: 'Asia/Tokyo',
         })}
       </div>
-      <Link href={`/article/${article.id}/form`} className={buttonVariants()}>
+      <Link href={`/articles/${article.id}/form`} className={buttonVariants()}>
         Create new sentence
       </Link>
       <SentenceList sentences={sentences} articleId={article.id} />

@@ -6,7 +6,7 @@ function getRedirectPath(pathname: string, user: any): string | null {
   if (pathname.startsWith('/login') && user) return '/';
 
   // /articleページに未ログインでアクセスした場合はログインページへリダイレクト
-  if (pathname.startsWith('/article') && !user) return '/login';
+  if (pathname.startsWith('/articles') && !user) return '/login';
 
   // トップページにアクセスした場合のリダイレクト処理
   if (pathname === '/') {

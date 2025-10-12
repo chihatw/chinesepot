@@ -14,8 +14,8 @@ export const deleteSentence = async (
     return;
   }
   revalidatePath('/');
-  revalidatePath(`/article/${articleId}`);
-  revalidatePath(`/article/${articleId}/form`);
+  revalidatePath(`/articles/${articleId}`);
+  revalidatePath(`/articles/${articleId}/form`);
   return;
 };
 
@@ -34,6 +34,6 @@ export const addSentence = async (
     return { error: error.message };
   }
   revalidatePath('/');
-  revalidatePath(`/article/${_article_id}`);
+  revalidatePath(`/articles/${_article_id}`);
   return { data };
 };

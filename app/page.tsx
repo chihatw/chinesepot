@@ -26,7 +26,10 @@ export default async function Home() {
             timeZone: 'Asia/Tokyo',
           })}
         </div>
-        <Link href={`/article/${article.id}/form`} className={buttonVariants()}>
+        <Link
+          href={`/articles/${article.id}/form`}
+          className={buttonVariants()}
+        >
           Create new sentence
         </Link>
         <SentenceList sentences={sentences} articleId={article.id!} />

@@ -21,6 +21,6 @@ export const addHanzi = async (
   if (!data) {
     return { error: `already has hanzi` };
   }
-  revalidatePath(`/article/${articleId}/form`);
+  revalidatePath(`/articles/${articleId}/form`);
   return { data };
 };

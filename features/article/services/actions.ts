@@ -16,7 +16,7 @@ export const addArticle = async (
     return { error: error.message };
   }
   revalidatePath('/');
-  revalidatePath('/article/list');
+  revalidatePath('/articles/list');
   return {};
 };
 
@@ -39,9 +39,9 @@ export const updateArticle = async (
     return { error: error.message };
   }
   revalidatePath('/');
-  revalidatePath('/article/list');
-  revalidatePath(`/article/${article.id}`);
-  revalidatePath(`/article/${article.id}/form`);
+  revalidatePath('/articles/list');
+  revalidatePath(`/articles/${article.id}`);
+  revalidatePath(`/articles/${article.id}/form`);
   return {};
 };
 
@@ -54,6 +54,6 @@ export const deleteArticle = async (
     return { error: error.message };
   }
   revalidatePath('/');
-  revalidatePath('/article/list');
+  revalidatePath('/articles/list');
   return {};
 };

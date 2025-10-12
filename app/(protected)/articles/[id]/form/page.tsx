@@ -6,24 +6,20 @@ import SentenceForm from '@/features/sentence/components/SentenceForm';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-const ArticleSentenceFormPage = async (
-  props: {
-    params: Promise<{ id: number }>; // url 内部の "/[id]/" の部分
-    searchParams: Promise<{ text?: string }>; // url 後ろの "?text=..."の部分
-  }
-) => {
+const ArticleSentenceFormPage = async (props: {
+  params: Promise<{ id: number }>; // url 内部の "/[id]/" の部分
+  searchParams: Promise<{ text?: string }>; // url 後ろの "?text=..."の部分
+}) => {
   const searchParams = await props.searchParams;
   const params = await props.params;
 
-  const {
-    id
-  } = params;
+  const { id } = params;
 
-  if (!id) redirect('/article/list');
+  if (!id) redirect('/articles/list');
 
   const article = await fetchArticle(id);
   if (!article || !article.id) {
-    redirect('/article/list');
+    redirect('/articles/list');
   }
 
   // input の値は searchParams で保持 '？text='
@@ -32,7 +28,7 @@ const ArticleSentenceFormPage = async (
   return (
     <div className='mx-auto max-w-md grid gap-8'>
       <div className='text-2xl font-bold'>{article.title}</div>
-      <Link href={`/article/${article.id}`} className={buttonVariants()}>
+      <Link href={`/articles/${article.id}`} className={buttonVariants()}>
         Back to Article
       </Link>
       <SentenceFormWrapper text={text} articleId={article.id} />

@@ -7,7 +7,7 @@ import { DoorClosed, Home } from 'lucide-react';
 import { buttonVariants } from './ui/button';
 
 const LINKS: { url: string; label: string }[] = [
-  { url: '/article/list', label: 'Article List' },
+  { url: '/articles/list', label: 'Article List' },
 ];
 
 const Header = async () => {
@@ -29,7 +29,7 @@ const Header = async () => {
           {user ? (
             <>
               <Link
-                href={'/article/form'}
+                href={'/articles/form'}
                 className={buttonVariants({ variant: 'ghost' })}
               >
                 <span>Create New Article</span>

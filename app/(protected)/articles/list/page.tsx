@@ -21,7 +21,7 @@ const ArticleListPage = async () => {
     <div className='mx-auto max-w-lg grid gap-8 '>
       <div className='text-4xl font-extrabold'>Article List</div>
       <Link
-        href={'/article/form'}
+        href={'/articles/form'}
         className={buttonVariants({ variant: 'default' })}
       >
         <span>Create New Article</span>
