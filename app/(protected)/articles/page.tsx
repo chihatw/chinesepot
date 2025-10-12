@@ -3,7 +3,6 @@ import ArticleList from '@/features/article/components/ArticleList';
 import { Article } from '@/features/article/schema';
 import { createClient } from '@/utils/supabase/server';
 
-import { Plus } from 'lucide-react';
 import Link from 'next/link';
 
 const Page = async () => {
@@ -19,13 +18,12 @@ const Page = async () => {
 
   return (
     <div className='mx-auto max-w-lg grid gap-8 '>
-      <div className='text-4xl font-extrabold'>Articles</div>
+      <div className='text-4xl font-extrabold'>文章一覧</div>
       <Link
         href={'/articles/new'}
         className={buttonVariants({ variant: 'default' })}
       >
-        <span>Create New Article</span>
-        <Plus size={22} />
+        <span>新規文章作成</span>
       </Link>
       <ArticleList articles={articles} />
     </div>

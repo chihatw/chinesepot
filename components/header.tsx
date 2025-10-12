@@ -7,7 +7,7 @@ import { DoorClosed, Home } from 'lucide-react';
 import { buttonVariants } from './ui/button';
 
 const LINKS: { url: string; label: string }[] = [
-  { url: '/articles', label: '一覧' },
+  { url: '/articles', label: '文章一覧' },
 ];
 
 const Header = async () => {
@@ -32,7 +32,7 @@ const Header = async () => {
                 href={'/articles/new'}
                 className={buttonVariants({ variant: 'ghost' })}
               >
-                <span>Create New Article</span>
+                <span>新規文章作成</span>
               </Link>
               {LINKS.map((link) => (
                 <Link

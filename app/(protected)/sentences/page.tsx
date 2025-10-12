@@ -38,7 +38,7 @@ const Page = async (props: {
   }
 
   return (
-    <div className='mx-auto max-w-md grid gap-4'>
+    <div className='mx-auto max-w-md grid gap-4 mb-20'>
       <div className='text-2xl font-bold'>{article.title}</div>
       <div>
         {new Date(article.date!).toLocaleDateString('ja-JP', {
@@ -49,7 +49,7 @@ const Page = async (props: {
         href={`/sentences/new?articleId=${article.id}`}
         className={buttonVariants()}
       >
-        Create new sentence
+        新規作成
       </Link>
       <SentenceList sentences={sentences} articleId={article.id} />
     </div>

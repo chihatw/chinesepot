@@ -30,7 +30,7 @@ export default async function Home() {
           href={`/sentences/new?articleId=${article.id}`}
           className={buttonVariants()}
         >
-          Create new sentence
+          新規作成
         </Link>
         <SentenceList sentences={sentences} articleId={article.id!} />
       </main>
