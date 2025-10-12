@@ -29,7 +29,7 @@ const Header = async () => {
           {user ? (
             <>
               <Link
-                href={'/articles/form'}
+                href={'/articles/new'}
                 className={buttonVariants({ variant: 'ghost' })}
               >
                 <span>Create New Article</span>

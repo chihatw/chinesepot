@@ -41,7 +41,7 @@ const ArticlePage = async (props: { params: Promise<{ id: number }> }) => {
           timeZone: 'Asia/Tokyo',
         })}
       </div>
-      <Link href={`/articles/${article.id}/form`} className={buttonVariants()}>
+      <Link href={`/articles/${article.id}/edit`} className={buttonVariants()}>
         Create new sentence
       </Link>
       <SentenceList sentences={sentences} articleId={article.id} />

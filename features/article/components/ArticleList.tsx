@@ -39,7 +39,7 @@ const ArticleList = ({ articles }: { articles: Article[] }) => {
                 <div>{article.title}</div>
               </div>
             </Link>
-            <Link href={`/articles/form?id=${article.id}`}>
+            <Link href={`/articles/new?id=${article.id}`}>
               <Edit2 />
             </Link>
 

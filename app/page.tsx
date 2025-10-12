@@ -27,7 +27,7 @@ export default async function Home() {
           })}
         </div>
         <Link
-          href={`/articles/${article.id}/form`}
+          href={`/articles/${article.id}/edit`}
           className={buttonVariants()}
         >
           Create new sentence
