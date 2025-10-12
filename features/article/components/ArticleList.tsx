@@ -34,7 +34,7 @@ const ArticleList = ({ articles }: { articles: Article[] }) => {
             </span>
           </div>
           <div className='grid grid-cols-[1fr_auto_auto] items-center gap-2'>
-            <Link href={`/articles/${article.id}`}>
+            <Link href={`/sentences?articleId=${article.id}`}>
               <div className='space-y-2 '>
                 <div>{article.title}</div>
               </div>

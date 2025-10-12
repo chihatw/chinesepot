@@ -40,7 +40,7 @@ export const updateArticle = async (
   }
   revalidatePath('/');
   revalidatePath('/articles');
-  revalidatePath(`/articles/${article.id}`);
+  revalidatePath(`/sentences?articleId=${article.id}`);
   revalidatePath(`/articles/${article.id}/edit`);
   return {};
 };

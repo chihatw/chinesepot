@@ -6,7 +6,7 @@ import { createClient } from '@/utils/supabase/server';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 
-const ArticleListPage = async () => {
+const Page = async () => {
   const supabase = await createClient();
 
   const { data } = await supabase
@@ -32,4 +32,4 @@ const ArticleListPage = async () => {
   );
 };
 
-export default ArticleListPage;
+export default Page;

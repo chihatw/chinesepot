@@ -3,25 +3,29 @@ import { Article } from '@/features/article/schema';
 import { fetchSentences } from '@/features/article/services/server';
 import SentenceList from '@/features/sentence/components/SentenceList';
 import { createClient } from '@/utils/supabase/server';
-
 import Link from 'next/link';
+
 import { redirect } from 'next/navigation';
 
-const ArticlePage = async (props: { params: Promise<{ id: number }> }) => {
-  const params = await props.params;
+const Page = async (props: {
+  params: Promise<{ id: number }>;
+  searchParams: Promise<{ articleId?: number }>;
+}) => {
+  const searchParams = await props.searchParams;
 
-  const { id } = params;
+  const { articleId } = searchParams;
 
-  if (!id) redirect('/articles');
+  if (!articleId) redirect('/articles');
 
   const supabase = await createClient();
+
   const { data } = await supabase
     .from('article_sentence_text_pinyins')
     .select('*')
-    .eq('id', id)
+    .eq('id', articleId)
     .order('index');
 
-  const sentences = await fetchSentences(id);
+  const sentences = await fetchSentences(articleId);
 
   if (!data || !data.length) {
     redirect('/articles');
@@ -49,4 +53,4 @@ const ArticlePage = async (props: { params: Promise<{ id: number }> }) => {
   );
 };
 
-export default ArticlePage;
+export default Page;

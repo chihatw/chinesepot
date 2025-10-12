@@ -62,7 +62,7 @@ const SentenceForm = ({
         return;
       }
       // エラーがなければ、リストに戻る
-      router.push(`/articles/${articleId}`);
+      router.push(`/sentences?articleId=${articleId}`);
     });
   };
 

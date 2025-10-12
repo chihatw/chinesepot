@@ -6,7 +6,7 @@ import SentenceForm from '@/features/sentence/components/SentenceForm';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-const ArticleSentenceFormPage = async (props: {
+const Page = async (props: {
   params: Promise<{ id: number }>; // url 内部の "/[id]/" の部分
   searchParams: Promise<{ text?: string }>; // url 後ろの "?text=..."の部分
 }) => {
@@ -28,7 +28,10 @@ const ArticleSentenceFormPage = async (props: {
   return (
     <div className='mx-auto max-w-md grid gap-8'>
       <div className='text-2xl font-bold'>{article.title}</div>
-      <Link href={`/articles/${article.id}`} className={buttonVariants()}>
+      <Link
+        href={`/sentences?articleId=${article.id}`}
+        className={buttonVariants()}
+      >
         Back to Article
       </Link>
       <SentenceFormWrapper text={text} articleId={article.id} />
@@ -36,7 +39,7 @@ const ArticleSentenceFormPage = async (props: {
   );
 };
 
-export default ArticleSentenceFormPage;
+export default Page;
 
 const SentenceFormWrapper = async ({
   text,
