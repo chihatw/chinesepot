@@ -12,7 +12,7 @@ const ArticlePage = async (props: { params: Promise<{ id: number }> }) => {
 
   const { id } = params;
 
-  if (!id) redirect('/articles/list');
+  if (!id) redirect('/articles');
 
   const supabase = await createClient();
   const { data } = await supabase
@@ -24,13 +24,13 @@ const ArticlePage = async (props: { params: Promise<{ id: number }> }) => {
   const sentences = await fetchSentences(id);
 
   if (!data || !data.length) {
-    redirect('/articles/list');
+    redirect('/articles');
   }
 
   const article = data[0] as Article;
 
   if (!article || !article.id) {
-    redirect('/articles/list');
+    redirect('/articles');
   }
 
   return (

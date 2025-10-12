@@ -15,11 +15,11 @@ const ArticleSentenceFormPage = async (props: {
 
   const { id } = params;
 
-  if (!id) redirect('/articles/list');
+  if (!id) redirect('/articles');
 
   const article = await fetchArticle(id);
   if (!article || !article.id) {
-    redirect('/articles/list');
+    redirect('/articles');
   }
 
   // input の値は searchParams で保持 '？text='

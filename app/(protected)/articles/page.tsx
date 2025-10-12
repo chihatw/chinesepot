@@ -19,7 +19,7 @@ const ArticleListPage = async () => {
 
   return (
     <div className='mx-auto max-w-lg grid gap-8 '>
-      <div className='text-4xl font-extrabold'>Article List</div>
+      <div className='text-4xl font-extrabold'>Articles</div>
       <Link
         href={'/articles/form'}
         className={buttonVariants({ variant: 'default' })}

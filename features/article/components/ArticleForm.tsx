@@ -48,7 +48,7 @@ const ArticleForm = ({ article }: { article: Article | null }) => {
         return;
       }
       // エラーがなければ、リストに戻る
-      router.push('/articles/list');
+      router.push('/articles');
     });
   };
 
@@ -64,7 +64,7 @@ const ArticleForm = ({ article }: { article: Article | null }) => {
         return;
       }
       // エラーがなければ、リストに戻る
-      router.push('/articles/list');
+      router.push('/articles');
     });
   };
 

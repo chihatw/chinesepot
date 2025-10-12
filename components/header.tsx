@@ -7,7 +7,7 @@ import { DoorClosed, Home } from 'lucide-react';
 import { buttonVariants } from './ui/button';
 
 const LINKS: { url: string; label: string }[] = [
-  { url: '/articles/list', label: 'Article List' },
+  { url: '/articles', label: '一覧' },
 ];
 
 const Header = async () => {
