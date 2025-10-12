@@ -95,7 +95,7 @@ const SentenceForm = ({
           !value.selectedHanzis.length
         }
       >
-        新規文章作成
+        新規作成
         {isPending ? <Loader2 className='animate-spin' /> : null}
       </Button>
       {value.error ? <span className='text-red-500'>{value.error}</span> : null}
