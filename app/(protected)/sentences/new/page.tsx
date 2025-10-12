@@ -24,7 +24,7 @@ const Page = async (props: {
   const text = rawText?.trim() || '';
 
   return (
-    <div className='mx-auto max-w-md grid gap-8'>
+    <div className='mx-auto max-w-md grid gap-8 mb-20'>
       <div className='text-2xl font-bold'>{article.title}</div>
       <Link
         href={`/sentences?articleId=${article.id}`}
