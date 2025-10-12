@@ -1,30 +1,12 @@
 import ArticleForm from '@/features/article/components/ArticleForm';
-import { Article } from '@/features/article/schema';
-import { fetchArticle } from '@/features/article/services/server';
 
-const ArticleFormPage = async (props: {
-  searchParams: Promise<{ id?: number }>;
-}) => {
-  const searchParams = await props.searchParams;
-
-  const { id } = searchParams;
-
-  // article は null の時もある
-  // create の時は null, update の時 Article
-  let article: null | Article = null;
-
-  if (id) {
-    const result = await fetchArticle(id);
-    if (result) {
-      article = result;
-    }
-  }
+const Page = async () => {
   return (
     <div className='mx-auto max-w-lg grid gap-8'>
       <div className='text-4xl font-extrabold'>Article 作成</div>
-      <ArticleForm article={article} />
+      <ArticleForm />
     </div>
   );
 };
 
-export default ArticleFormPage;
+export default Page;

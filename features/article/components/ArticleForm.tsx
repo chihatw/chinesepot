@@ -22,7 +22,7 @@ interface FormValue {
   error: string;
 }
 
-const ArticleForm = ({ article }: { article: Article | null }) => {
+const ArticleForm = ({ article }: { article?: Article }) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [value, setValue] = useState<FormValue>({
