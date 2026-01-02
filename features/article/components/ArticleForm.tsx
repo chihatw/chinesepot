@@ -1,15 +1,11 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
+
 import { Input } from '@/components/ui/input';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+
 import { format } from 'date-fns';
-import { CalendarIcon, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { SetStateAction, useState, useTransition } from 'react';
 import { Article, Article_db } from '../schema';
@@ -35,10 +31,7 @@ const ArticleForm = ({ article }: { article?: Article }) => {
   const add = () => {
     const article: Article_db = {
       title: value.title,
-      date: format(
-        value.date.toLocaleDateString('en-US', { timeZone: 'Asia/Tokyo' }),
-        'yyyy-MM-dd'
-      ),
+      date: format(value.date, 'yyyy-MM-dd'),
     };
 
     startTransition(async () => {
@@ -112,29 +105,24 @@ const DatePicker = ({
   value: FormValue;
   setValue: (value: SetStateAction<FormValue>) => void;
 }) => {
+  // input[type=date] は "YYYY-MM-DD"
+  const yyyyMmDd = format(value.date, 'yyyy-MM-dd');
+
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          type='button'
-          variant={'outline'}
-          className={'w-full justify-start bg-white text-left font-normal'}
-        >
-          <CalendarIcon className='mr-2 h-4 w-4' />
-          {format(value.date, 'yyyy/MM/dd')}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className='w-auto p-0' align='start'>
-        <Calendar
-          mode='single'
-          selected={value.date}
-          onSelect={(date) => {
-            if (!date) return;
-            setValue((prev) => ({ ...prev, date, error: '' }));
-          }}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
+    <Input
+      type='date'
+      className='bg-white'
+      value={yyyyMmDd}
+      onChange={(e) => {
+        const v = e.target.value; // "YYYY-MM-DD"
+        if (!v) return;
+
+        // ローカル日付として Date を作る（UTCズレ回避）
+        const [y, m, d] = v.split('-').map(Number);
+        const date = new Date(y, (m ?? 1) - 1, d ?? 1);
+
+        setValue((prev) => ({ ...prev, date, error: '' }));
+      }}
+    />
   );
 };
