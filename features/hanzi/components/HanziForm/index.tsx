@@ -1,12 +1,10 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
-
 import useDebouce from '@/hooks/useDebounce';
 
-import { Button } from '@/components/ui/button';
 import PinyinBadge from '@/features/pinyin/components/PinyinBadge';
 import { Pinyin, PinyinFilter } from '@/features/pinyin/schema';
+import { buttonPrimary, inputStyle } from '@/lib/styles';
 import {
   buildPinyin,
   buildPinyinFilter,
@@ -84,8 +82,8 @@ const HanziForm = ({
   return (
     <div className='grid h-[calc(100vh-200px)] grid-rows-[auto_auto_auto_auto_1fr] space-y-4'>
       <div className='grid grid-cols-[120px_150px_1fr_auto] items-center gap-2'>
-        <Input
-          className=' bg-white'
+        <input
+          className={inputStyle}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder='拼音'
@@ -99,12 +97,16 @@ const HanziForm = ({
             form={form}
           />
         </div>
-        <Button disabled={value.disabled || isPending} onClick={handleSubmit}>
+        <button
+          className={buttonPrimary}
+          disabled={value.disabled || isPending}
+          onClick={handleSubmit}
+        >
           {!!(value.pinyin.consonant + value.pinyin.vowel + value.pinyin.tone)
             ? '登錄'
             : '記号'}
           {isPending ? <Loader2 className='animate-spin' /> : null}
-        </Button>
+        </button>
       </div>
       {value.error ? <span className='text-red-500'>{value.error}</span> : null}
       <HanziList pinyinFilter={value.filter} />

@@ -1,7 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { buttonPrimary, inputStyle } from '@/lib/styles';
 import { isValidEmail } from '@/utils';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -32,7 +31,8 @@ function EmailLoginForm() {
 
   return (
     <form action={action} className='grid gap-4'>
-      <Input
+      <input
+        className={inputStyle}
         type='email'
         placeholder='Email'
         value={email}
@@ -40,7 +40,8 @@ function EmailLoginForm() {
         autoComplete='current-email'
         disabled={isPending}
       />
-      <Input
+      <input
+        className={inputStyle}
         type='password'
         placeholder='Password'
         value={password}
@@ -49,14 +50,14 @@ function EmailLoginForm() {
         disabled={isPending}
       />
       {errMsg && <div className='text-red-500 text-sm'>{errMsg}</div>}
-      <Button
+      <button
         type='submit'
         disabled={isPending || !isFormValid}
-        className='flex items-center gap-x-0.5'
+        className={buttonPrimary}
       >
         Login
         {isPending ? <Loader2 className='animate-spin' /> : null}
-      </Button>
+      </button>
     </form>
   );
 }

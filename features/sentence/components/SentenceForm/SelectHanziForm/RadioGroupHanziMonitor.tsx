@@ -1,4 +1,3 @@
-import { RadioGroupItem } from '@/components/ui/radio-group';
 import PinyinHanzi from '@/features/hanzi/components/PinyinHanzi';
 
 import { Hanzi_latest_sentence_count } from '@/features/hanzi/schema';
@@ -6,13 +5,28 @@ import SentenceLine from '@/features/sentence/components/SentenceLine';
 
 const RadioGroupHanziMonitor = ({
   hanzi,
+  name,
+  selectedHanzi,
+  onChange,
 }: {
   hanzi: Hanzi_latest_sentence_count;
+  name: string;
+  selectedHanzi: string;
+  onChange: (value: string) => void;
 }) => {
+  const value = String(hanzi.id);
+
   return (
     <div className='flex items-center gap-2 '>
       <div className='grid grid-cols-[auto_36px] items-center gap-2 rounded bg-white px-4 py-2 h-[54px]'>
-        <RadioGroupItem value={String(hanzi.id)} />
+        <input
+          type='radio'
+          name={name}
+          value={value}
+          checked={selectedHanzi === value}
+          onChange={(event) => onChange(event.target.value)}
+          className='h-4 w-4 border-slate-300 text-slate-900 focus:ring-slate-400'
+        />
         <div className='grid place-items-center '>
           <PinyinHanzi
             form={hanzi.form!}

@@ -1,11 +1,12 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState, useTransition } from 'react';
 
 import { Hanzi_latest_sentence_count } from '@/features/hanzi/schema';
+import { buttonPrimary } from '@/lib/styles';
+import { cn } from '@/lib/utils';
 import { addSentence } from '../../actions';
 import InputTextForm from './InputTextForm';
 import SelectHanziForm from './SelectHanziForm';
@@ -35,7 +36,7 @@ const SentenceForm = ({
         hanzis
           .filter((h) => h.form! === form)
           ?.sort((a, b) => b.count! - a.count!)[0]
-          ?.id!.toString() || '' // Radio Group の値に合わせて string に変換
+          ?.id!.toString() || '', // Radio Group の値に合わせて string に変換
     );
     setValue({ selectedHanzis, error: '' });
   }, [forms, hanzis]);
@@ -86,8 +87,8 @@ const SentenceForm = ({
         hanzis={hanzis}
         selectedHanzis={value.selectedHanzis}
       />
-      <Button
-        className='w-full'
+      <button
+        className={cn(buttonPrimary, 'w-full')}
         onClick={handleSubmit}
         disabled={
           isPending ||
@@ -97,7 +98,7 @@ const SentenceForm = ({
       >
         新規作成
         {isPending ? <Loader2 className='animate-spin' /> : null}
-      </Button>
+      </button>
       {value.error ? <span className='text-red-500'>{value.error}</span> : null}
     </div>
   );

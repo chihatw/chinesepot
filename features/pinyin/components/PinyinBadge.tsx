@@ -1,4 +1,3 @@
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 import { Pinyin } from '../schema';
@@ -16,25 +15,23 @@ const PinyinBadge = ({ pinyin }: { pinyin: Pinyin }) => {
       )}
     >
       {pinyin.consonant ? (
-        <Badge
-          variant='outline'
+        <span
           className={cn(pinyinColor(pinyin.consonant), 'm-0 rounded-none px-1')}
         >
           {pinyin.consonant}
-        </Badge>
+        </span>
       ) : null}
       {pinyin.vowel ? (
-        <Badge
-          variant='outline'
+        <span
           className={cn(pinyinColor(pinyin.vowel), 'm-0 rounded-none px-1')}
         >
           {pinyin.vowel}
-        </Badge>
+        </span>
       ) : null}
       {pinyin.tone ? (
-        <Badge variant='outline' className='m-0 rounded-none bg-white px-1'>
+        <span className='m-0 rounded-none bg-white px-1'>
           {pinyin.tone}
-        </Badge>
+        </span>
       ) : null}
     </div>
   );

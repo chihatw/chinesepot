@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { buttonGhostIcon } from '@/lib/styles';
 import { DoorOpen } from 'lucide-react';
 import { logout } from '../services/actions';
 
@@ -13,9 +13,9 @@ const HeaderLogoutButton = (props: Props) => {
 
   return (
     <form action={signOut}>
-      <Button variant={'ghost'} size={'icon'} type='submit'>
+      <button className={buttonGhostIcon} type='submit'>
         <DoorOpen />
-      </Button>
+      </button>
     </form>
   );
 };

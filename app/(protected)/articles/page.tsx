@@ -1,6 +1,6 @@
-import { buttonVariants } from '@/components/ui/button';
 import ArticleList from '@/features/article/components/ArticleList';
 import { Article } from '@/features/article/schema';
+import { buttonPrimary } from '@/lib/styles';
 import { createClient } from '@/utils/supabase/server';
 
 import Link from 'next/link';
@@ -21,7 +21,7 @@ const Page = async () => {
       <div className='text-4xl font-extrabold'>文章一覧</div>
       <Link
         href={'/articles/new'}
-        className={buttonVariants({ variant: 'default' })}
+        className={buttonPrimary}
       >
         <span>新規文章作成</span>
       </Link>

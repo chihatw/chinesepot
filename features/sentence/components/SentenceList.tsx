@@ -1,7 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-
+import { buttonGhostIcon } from '@/lib/styles';
 import { Delete } from 'lucide-react';
 import { useOptimistic } from 'react';
 import { deleteSentence } from '../actions';
@@ -39,13 +38,12 @@ const SentenceList = ({
               >
                 <div className='text-xs'>{index + 1}</div>
                 <SentenceLine sentence={sentence} />
-                <Button
-                  size='icon'
-                  variant='ghost'
+                <button
+                  className={buttonGhostIcon}
                   onClick={() => handleDelete(sentence.sentence_id!)}
                 >
                   <Delete />
-                </Button>
+                </button>
               </div>
             );
           }

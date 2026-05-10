@@ -1,4 +1,4 @@
-import { Input } from '@/components/ui/input';
+import { inputStyle } from '@/lib/styles';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
@@ -43,15 +43,18 @@ const InputTextForm = ({
     if (trimed === text) return;
 
     // 違う場合、searchParams を変更する
-    const url =
-      pathname + (trimed ? `?text=${trimed}&articleId=${articleId}` : '');
-    router.push(url);
+    const searchParams = new URLSearchParams({
+      articleId: articleId.toString(),
+    });
+    if (trimed) searchParams.set('text', trimed);
+
+    router.push(`${pathname}?${searchParams.toString()}`);
   };
 
   return (
     <form ref={form}>
-      <Input
-        className='bg-white'
+      <input
+        className={inputStyle}
         onChange={handleChangeText}
         name='text'
         autoFocus

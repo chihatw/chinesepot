@@ -1,7 +1,7 @@
-import { buttonVariants } from '@/components/ui/button';
 import { Article } from '@/features/article/schema';
 import { fetchSentences } from '@/features/article/services/server';
 import SentenceList from '@/features/sentence/components/SentenceList';
+import { buttonPrimary } from '@/lib/styles';
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 
@@ -47,7 +47,7 @@ const Page = async (props: {
       </div>
       <Link
         href={`/sentences/new?articleId=${article.id}`}
-        className={buttonVariants()}
+        className={buttonPrimary}
       >
         新規作成
       </Link>

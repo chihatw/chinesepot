@@ -1,7 +1,7 @@
-import { buttonVariants } from '@/components/ui/button';
 import { fetchArticle } from '@/features/article/services/server';
 import { fetchHanziLatestSentenceCounts } from '@/features/hanzi/services/services';
 import SentenceForm from '@/features/sentence/components/SentenceForm';
+import { buttonPrimary } from '@/lib/styles';
 
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -28,7 +28,7 @@ const Page = async (props: {
       <div className='text-2xl font-bold'>{article.title}</div>
       <Link
         href={`/sentences?articleId=${article.id}`}
-        className={buttonVariants()}
+        className={buttonPrimary}
       >
         Back to Article
       </Link>

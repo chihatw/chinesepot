@@ -22,7 +22,7 @@ const PinyinHanzi = ({
         <div
           className={cn(
             fontPinyin.className,
-            'absolute text-destructive',
+            'absolute text-red-600',
             mark === '•' ? '-top-3' : '-top-2'
           )}
         >

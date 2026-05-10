@@ -1,13 +1,11 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-
-import { Input } from '@/components/ui/input';
-
 import { format } from 'date-fns';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { SetStateAction, useState, useTransition } from 'react';
+import { buttonPrimary, inputStyle } from '@/lib/styles';
+import { cn } from '@/lib/utils';
 import { Article, Article_db } from '../schema';
 import { addArticle, updateArticle } from '../services/actions';
 
@@ -67,9 +65,9 @@ const ArticleForm = ({ article }: { article?: Article }) => {
 
   return (
     <div className='grid gap-10'>
-      <Input
+      <input
         autoFocus
-        className='bg-white'
+        className={inputStyle}
         placeholder='title'
         value={value.title}
         onChange={(e) => {
@@ -83,14 +81,14 @@ const ArticleForm = ({ article }: { article?: Article }) => {
         }}
       />
       <DatePicker value={value} setValue={setValue} />
-      <Button
-        className='w-full'
+      <button
+        className={cn(buttonPrimary, 'w-full')}
         disabled={!value.isValid || isPending}
         onClick={handleClick}
       >
         Submit
         {isPending ? <Loader2 className='animate-spin' /> : null}
-      </Button>
+      </button>
       {value.error ? <span className='text-red-500'>{value.error}</span> : null}
     </div>
   );
@@ -109,9 +107,9 @@ const DatePicker = ({
   const yyyyMmDd = format(value.date, 'yyyy-MM-dd');
 
   return (
-    <Input
+    <input
       type='date'
-      className='bg-white'
+      className={inputStyle}
       value={yyyyMmDd}
       onChange={(e) => {
         const v = e.target.value; // "YYYY-MM-DD"

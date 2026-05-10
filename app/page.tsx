@@ -1,8 +1,8 @@
 import Header from '@/components/header';
-import { buttonVariants } from '@/components/ui/button';
 import { Article } from '@/features/article/schema';
 import { fetchLatestSentences } from '@/features/article/services/server';
 import SentenceList from '@/features/sentence/components/SentenceList';
+import { buttonPrimary } from '@/lib/styles';
 
 import Link from 'next/link';
 
@@ -28,7 +28,7 @@ export default async function Home() {
         </div>
         <Link
           href={`/sentences/new?articleId=${article.id}`}
-          className={buttonVariants()}
+          className={buttonPrimary}
         >
           新規作成
         </Link>

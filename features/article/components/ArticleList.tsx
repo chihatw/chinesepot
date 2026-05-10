@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { buttonGhostIcon } from '@/lib/styles';
 import { Edit2, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useOptimistic } from 'react';
@@ -43,13 +43,12 @@ const ArticleList = ({ articles }: { articles: Article[] }) => {
               <Edit2 />
             </Link>
 
-            <Button
-              variant={'ghost'}
-              size='icon'
+            <button
+              className={buttonGhostIcon}
               onClick={() => handleSubmit(article.id!)}
             >
               <Trash2 />
-            </Button>
+            </button>
           </div>
         </div>
       ))}
