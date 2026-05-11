@@ -2,7 +2,7 @@
 
 import { buttonGhostIcon } from '@/lib/styles';
 import { Delete } from 'lucide-react';
-import { useOptimistic } from 'react';
+import { useOptimistic, useTransition } from 'react';
 import { deleteSentence } from '../actions';
 import { SentenceView } from '../schema';
 import SentenceLine from './SentenceLine';
@@ -14,6 +14,7 @@ const SentenceList = ({
   articleId: number;
   sentences: SentenceView[];
 }) => {
+  const [, startTransition] = useTransition();
   const [optimisticSentences, deleteOptimisticSentences] = useOptimistic<
     SentenceView[],
     number
@@ -22,7 +23,9 @@ const SentenceList = ({
   });
 
   const handleDelete = async (sentenceId: number) => {
-    deleteOptimisticSentences(sentenceId);
+    startTransition(() => {
+      deleteOptimisticSentences(sentenceId);
+    });
     await deleteSentence(sentenceId, articleId);
   };
 
