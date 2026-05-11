@@ -1,61 +1,52 @@
 import { inputStyle } from '@/lib/styles';
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+const normalizeText = (raw: string) =>
+  raw
+    .trim()
+    .replace(/[a-zA-Z\u3041-\u3096\u30A1-\u30FA]/gi, '')
+    .replaceAll(' ', '');
 
 const InputTextForm = ({
   text,
-  articleId,
+  onChangeText,
 }: {
   text: string;
-  articleId: number;
+  onChangeText: (text: string) => void;
 }) => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const form = useRef<HTMLFormElement>(null);
+  const isComposing = useRef(false);
+  const [inputValue, setInputValue] = useState(text);
 
-  /**
-   * 初期値設定
-   */
   useEffect(() => {
-    if (!form.current) return;
-    const inputForm = form.current.elements[0] as HTMLInputElement;
-    inputForm.value = text;
+    if (isComposing.current) return;
+    setInputValue(text);
   }, [text]);
 
-  /**
-   * input を url に反映させる
-   */
-  const handleChangeText = () => {
-    // get raw
-    if (!form.current) return;
-    const formdata = new FormData(form.current);
-    const raw = formdata.get('text')!;
+  const handleChangeText = (raw: string) => {
+    setInputValue(raw);
 
-    // remove kana, alphabet
-    // 半角スペースも削除
-    const trimed = raw
-      ?.toString()
-      .trim()
-      .replace(/[a-zA-Z\u3041-\u3096\u30A1-\u30FA]/gi, '')
-      .replaceAll(' ', '');
+    if (isComposing.current) return;
 
-    // 現在の url の searchParams.text '?text=...' と trimed が同じなら何もしない
-    if (trimed === text) return;
+    const normalized = normalizeText(raw);
+    setInputValue(normalized);
 
-    // 違う場合、searchParams を変更する
-    const searchParams = new URLSearchParams({
-      articleId: articleId.toString(),
-    });
-    if (trimed) searchParams.set('text', trimed);
-
-    router.push(`${pathname}?${searchParams.toString()}`);
+    if (normalized === text) return;
+    onChangeText(normalized);
   };
 
   return (
-    <form ref={form}>
+    <form>
       <input
         className={inputStyle}
-        onChange={handleChangeText}
+        value={inputValue}
+        onChange={(event) => handleChangeText(event.target.value)}
+        onCompositionStart={() => {
+          isComposing.current = true;
+        }}
+        onCompositionEnd={(event) => {
+          isComposing.current = false;
+          handleChangeText(event.currentTarget.value);
+        }}
         name='text'
         autoFocus
       />

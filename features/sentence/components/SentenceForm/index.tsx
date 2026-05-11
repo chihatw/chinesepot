@@ -7,27 +7,48 @@ import { useEffect, useMemo, useState, useTransition } from 'react';
 import { Hanzi_latest_sentence_count } from '@/features/hanzi/schema';
 import { buttonPrimary } from '@/lib/styles';
 import { cn } from '@/lib/utils';
-import { addSentence } from '../../actions';
+import { addSentence, getHanziLatestSentenceCounts } from '../../actions';
 import InputTextForm from './InputTextForm';
 import SelectHanziForm from './SelectHanziForm';
 import SelectedHanzisMonitor from './SelectedHanzisMonitor';
 
 const SentenceForm = ({
-  text,
-  hanzis,
   articleId,
 }: {
-  text: string;
   articleId: number;
-  hanzis: Hanzi_latest_sentence_count[];
 }) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [text, setText] = useState('');
+  const [hanzis, setHanzis] = useState<Hanzi_latest_sentence_count[]>([]);
   const forms = useMemo(() => text.split(''), [text]);
   const [value, setValue] = useState<{
     selectedHanzis: string[];
     error: string;
   }>({ selectedHanzis: [], error: '' });
+
+  /** 入力値に対応する hanzis を取得 */
+  useEffect(() => {
+    let isActive = true;
+
+    if (!text) {
+      setHanzis([]);
+      return () => {
+        isActive = false;
+      };
+    }
+
+    setHanzis([]);
+    startTransition(async () => {
+      const nextHanzis = await getHanziLatestSentenceCounts(text);
+      if (!isActive) return;
+      setHanzis(nextHanzis);
+    });
+
+    return () => {
+      isActive = false;
+    };
+  }, [startTransition, text]);
 
   /** selectedHanzis の初期化 */
   useEffect(() => {
@@ -69,7 +90,7 @@ const SentenceForm = ({
 
   return (
     <div className='relative grid gap-4'>
-      <InputTextForm text={text} articleId={articleId} />
+      <InputTextForm text={text} onChangeText={setText} />
       <div className='space-y-4'>
         {forms.map((form, offset) => (
           <SelectHanziForm

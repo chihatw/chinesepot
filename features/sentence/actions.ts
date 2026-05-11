@@ -1,7 +1,15 @@
 'use server';
 
+import { fetchHanziLatestSentenceCounts } from '@/features/hanzi/services/services';
+import { Hanzi_latest_sentence_count } from '@/features/hanzi/schema';
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
+
+export const getHanziLatestSentenceCounts = async (
+  text: string
+): Promise<Hanzi_latest_sentence_count[]> => {
+  return fetchHanziLatestSentenceCounts(text);
+};
 
 export const deleteSentence = async (
   _id: number,
