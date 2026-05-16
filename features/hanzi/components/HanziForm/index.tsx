@@ -4,11 +4,11 @@ import useDebouce from '@/hooks/useDebounce';
 
 import PinyinBadge from '@/features/pinyin/components/PinyinBadge';
 import { Pinyin, PinyinFilter } from '@/features/pinyin/schema';
-import { buttonPrimary, inputStyle } from '@/lib/styles';
 import {
   buildPinyin,
   buildPinyinFilter,
 } from '@/features/pinyin/services/utils';
+import { buttonPrimary, inputStyle } from '@/lib/styles';
 import { Loader2 } from 'lucide-react';
 import { useEffect, useState, useTransition } from 'react';
 import { addHanzi } from '../../actions';
@@ -67,10 +67,7 @@ const HanziForm = ({
 
   const handleSubmit = async () => {
     startTransition(async () => {
-      const { data, error } = await addHanzi(
-        { ...value.pinyin, form },
-        articleId
-      );
+      const { error } = await addHanzi({ ...value.pinyin, form }, articleId);
       if (error) {
         setValue((prev) => ({ ...prev, error }));
         return;

@@ -6,21 +6,30 @@ import { Hanzi_insert } from './schema';
 
 export const addHanzi = async (
   hanzi: Hanzi_insert,
-  articleId: number
+  articleId: number,
 ): Promise<{ data?: number; error?: string }> => {
   const supabase = await createClient();
-  const { data, error } = await supabase.rpc('insert_hanzi', {
-    _form: hanzi.form,
-    _consonant: hanzi.consonant,
-    _vowel: hanzi.vowel,
-    _tone: hanzi.tone,
-  });
+
+  const { data, error } = await supabase
+    .from('hanzis')
+    .insert({
+      form: hanzi.form,
+      consonant: hanzi.consonant,
+      vowel: hanzi.vowel,
+      tone: hanzi.tone,
+    })
+    .select('id')
+    .single();
+
   if (error) {
+    if (error.code === '23505') {
+      return { error: 'already has hanzi' };
+    }
+
     return { error: error.message };
   }
-  if (!data) {
-    return { error: `already has hanzi` };
-  }
+
   revalidatePath(`/articles/${articleId}/form`);
-  return { data };
+
+  return { data: data.id };
 };
