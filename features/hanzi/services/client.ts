@@ -1,4 +1,5 @@
 import { Hanzi, Hanzi_db_raw } from '@/features/hanzi/schema';
+import { VOWEL_PAIRS } from '@/features/pinyin/constants/vowels';
 import { Pinyin } from '@/features/pinyin/schema';
 import { createClient } from '@/utils/supabase/client';
 
@@ -28,7 +29,14 @@ export const getHanzisByPinyin = async (
     }
     hanzis_raw = data || [];
   } else if (!hasConsonant && hasVowel && hasTone) {
-    const vowels = [pinyin.vowel, `w${pinyin.vowel}`, `y${pinyin.vowel}`];
+    const vowels = [
+      ...new Set([
+        pinyin.vowel,
+        `w${pinyin.vowel}`,
+        `y${pinyin.vowel}`,
+        VOWEL_PAIRS[pinyin.vowel],
+      ].filter((vowel): vowel is string => !!vowel)),
+    ];
 
     const { data, error } = await supabase
       .from('hanzis')
