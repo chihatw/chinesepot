@@ -1,9 +1,8 @@
 import {
+  CONSONANTS,
   ONE_CHAR_CONSONANTS,
   TWO_CHAR_CONSONANTS,
 } from '../constants/consonants';
-import { TONES } from '../constants/tones';
-import { vowels_grouped_by_chars } from '../constants/vowelfilter';
 import {
   EXTROVERTED_VOWELS,
   INTROVERTED_VOWELS,
@@ -11,176 +10,7 @@ import {
   VOWELS,
   VOWEL_PAIRS,
 } from '../constants/vowels';
-import { Pinyin, PinyinFilter } from '../schema';
-
-export const buildPinyin = (value: string): Pinyin => {
-  // 最後尾が TONE かどうかチェック
-  const tail = value.at(-1) || '';
-  let tone = '';
-  if (TONES.includes(tail)) {
-    tone = tail;
-  }
-
-  const valueOmitTone = !!tone ? value.slice(0, value.length - 1) : value;
-  const consonant = getConsonant(valueOmitTone);
-  const valueOmitToneConsonant = valueOmitTone.slice(consonant.length);
-
-  const vowel = getVowel(valueOmitToneConsonant);
-
-  let pinyin: Pinyin | undefined = undefined;
-
-  pinyin = {
-    tone,
-    consonant,
-    vowel,
-  };
-
-  return pinyin;
-};
-
-export const buildPinyinFilter = (value: string): PinyinFilter => {
-  const tone = getTone(value);
-
-  const value_omitted_tone = !!tone ? value.slice(0, value.length - 1) : value;
-
-  const consonants = value_omitted_tone
-    ? getConsonants(value_omitted_tone, !!tone)
-    : [];
-
-  const vowels = getVowelsByConsonants(value_omitted_tone, consonants, !!tone);
-
-  return {
-    vowels,
-    consonants,
-    tone,
-  };
-};
-
-/**
- * value 文字列の最後尾が '0,1,2,3,4' ならば、それを返し
- *
- * それ以外なら空文字列を返す
- */
-const getTone = (value: string) => {
-  const tail = value.at(-1);
-  if (!tail) return '';
-  return TONES.includes(tail) ? tail : '';
-};
-
-const remove_Y_W_vowels = (vowels: string[]) => {
-  return vowels.filter((v) => {
-    const head = v.split('')[0];
-    return !['y', 'w'].includes(head);
-  });
-};
-
-const getShortestVowel = (vowels: string[]) => {
-  let shortest = 'xxxxx'; // 母音の最長は4字なので、初期値は５字に設定
-  for (const vowel of vowels) {
-    if (shortest.length > vowel.length) {
-      shortest = vowel;
-    }
-  }
-  return shortest;
-};
-/**
- * 子音候補が0個の場合、文字列を母音対応表に当てはめて、母音候補を返す
- *
- * 子音候補が1個の場合、文字列を母音対応表に当てはめて、y, w がつかない母音候補を返す
- *
- * 子音候補が2個の場合、それぞれの文字列を母音対応表に当てはめて、y, w がつかない母音候補を返す
- *
- * 声調が入力済の場合、母音候補の中で一番短い文字列のものを返す
- */
-const getVowelsByConsonants = (
-  value_omitted_tone: string,
-  consonants: string[],
-  hasTone: boolean,
-) => {
-  let target = '';
-  let vowels: string[] = [];
-  switch (consonants.length) {
-    case 0:
-      target = value_omitted_tone;
-      vowels = vowels_grouped_by_chars[target] || [];
-      break;
-    case 1:
-      target = value_omitted_tone.slice(consonants[0].length);
-      vowels = vowels_grouped_by_chars[target] || [];
-      vowels = remove_Y_W_vowels(vowels);
-      break;
-    case 2:
-      for (let length = 1; length <= 2; length++) {
-        target = value_omitted_tone.slice(length);
-        const _vowels = vowels_grouped_by_chars[target] || [];
-        vowels = [...new Set([...vowels, ..._vowels])];
-      }
-      vowels = remove_Y_W_vowels(vowels);
-      break;
-    default:
-      throw new Error(`wrong consonants.length: ${consonants.length}`);
-  }
-  return vowels.length && hasTone ? [getShortestVowel(vowels)] : vowels;
-};
-
-const getConsonant = (value: string) => {
-  const headTwo = value.slice(0, 2);
-  if (TWO_CHAR_CONSONANTS.includes(headTwo)) {
-    return headTwo;
-  }
-
-  const headOne = value.at(0) || '';
-  if (ONE_CHAR_CONSONANTS.includes(headOne)) {
-    return headOne;
-  }
-
-  return '';
-};
-
-/**
- * 声調が含まれない文字列から子音候補を返す
- */
-const getConsonants = (value: string, hasTone: boolean) => {
-  // zh/ch/sh が完成している
-  const twoChar = value.slice(0, 2);
-
-  if (TWO_CHAR_CONSONANTS.includes(twoChar)) {
-    return [twoChar];
-  }
-
-  const head = value[0];
-
-  if (!head) {
-    return [];
-  }
-
-  // 母音や声調が入力済みなら
-  // 1文字子音のみ許可
-  if (value.length > 1 || hasTone) {
-    return ONE_CHAR_CONSONANTS.includes(head) ? [head] : [];
-  }
-
-  // z -> z, zh
-  // c -> c, ch
-  // s -> s, sh
-  if (head === 'z') {
-    return ['z', 'zh'];
-  }
-
-  if (head === 'c') {
-    return ['c', 'ch'];
-  }
-
-  if (head === 's') {
-    return ['s', 'sh'];
-  }
-
-  return ONE_CHAR_CONSONANTS.includes(head) ? [head] : [];
-};
-
-const getVowel = (value: string): string => {
-  return VOWELS.includes(value) ? value : '';
-};
+import { INITIAL_PINYIN, Pinyin } from '../schema';
 
 export const isValidPinyin = ({ consonant, vowel, tone }: Pinyin) => {
   // tone, 母音がないのはダメ
@@ -201,16 +31,6 @@ export const isValidPinyin = ({ consonant, vowel, tone }: Pinyin) => {
     return false;
 
   return true;
-};
-
-export const buildPinyins = (value: string) => {
-  const pinyins: Pinyin[] = [];
-  const units = value.split('\u0020').filter(Boolean);
-  for (const unit of units) {
-    const pinyin = buildPinyin(unit);
-    pinyins.push(pinyin);
-  }
-  return pinyins;
 };
 
 export const pinyinColor = (pinyin: string) => {
@@ -237,4 +57,73 @@ export const pinyinColor = (pinyin: string) => {
     return 'bg-sky-100';
   }
   return '';
+};
+
+export const parsePinyinInput = (rawInput: string): Pinyin => {
+  const input = rawInput.trim().toLowerCase();
+
+  if (!input) {
+    return INITIAL_PINYIN;
+  }
+
+  // 末尾の声調だけ許可
+  const toneMatch = input.match(/[0-4]$/);
+
+  const tone = toneMatch ? toneMatch[0] : '';
+
+  const body = tone ? input.slice(0, -1) : input;
+
+  // 声調が途中に存在したら invalid
+  // sh2en / shen21 など
+  if (/[0-4]/.test(body)) {
+    return INITIAL_PINYIN;
+  }
+
+  if (!body) {
+    return INITIAL_PINYIN;
+  }
+
+  // 子音あり
+  for (const consonant of CONSONANTS) {
+    if (!body.startsWith(consonant)) {
+      continue;
+    }
+
+    const vowel = body.slice(consonant.length);
+
+    // 入力途中
+    // s / sh / zh
+    if (!vowel && !tone) {
+      return {
+        consonant,
+        vowel: '',
+        tone: '',
+      };
+    }
+
+    // sh2 のように母音なしで声調だけある
+    if (!vowel && tone) {
+      return INITIAL_PINYIN;
+    }
+
+    if (VOWELS.includes(vowel as any)) {
+      return {
+        consonant,
+        vowel,
+        tone,
+      };
+    }
+  }
+
+  // 子音なし
+  // wang1 / ai4 / er2 など
+  if (VOWELS.includes(body as any)) {
+    return {
+      consonant: '',
+      vowel: body,
+      tone,
+    };
+  }
+
+  return INITIAL_PINYIN;
 };

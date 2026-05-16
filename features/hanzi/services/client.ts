@@ -1,100 +1,44 @@
 import { Hanzi, Hanzi_db_raw } from '@/features/hanzi/schema';
-import { PinyinFilter } from '@/features/pinyin/schema';
+import { Pinyin } from '@/features/pinyin/schema';
 import { createClient } from '@/utils/supabase/client';
 
-export const getHanzisByPinyinFilter = async (
-  filter: PinyinFilter
+export const getHanzisByPinyin = async (
+  pinyin: Pinyin,
 ): Promise<{
-  data?: { hanzis: Hanzi[]; limit?: number; group?: string };
+  data?: { hanzis: Hanzi[] };
   error?: string;
 }> => {
-  // フィルターの組み合わせによって、limit と group を変える
-  let limit: undefined | number = undefined;
-  let group: undefined | string = undefined;
-
   let hanzis_raw: Hanzi_db_raw[] = [];
   const supabase = createClient();
 
-  const hasVowels = !!filter.vowels.length;
-  const hasConsonants = !!filter.consonants.length;
-  const hasTone = !!filter.tone;
-  // 母音のみ
-  if (hasVowels && !hasConsonants && !hasTone) {
-    group = '子音+母音'; // 母音は複数指定されている。子音は有無が不明。 i -> i, yi
-    limit = 5;
-    const { data, error } = await supabase.rpc('get_hanzis_by_vowels', {
-      _limit: limit,
-      _vowels: filter.vowels,
-    });
-    if (error) {
-      return { error: error.message };
-    }
-    hanzis_raw = data;
+  const hasVowel = !!pinyin.vowel;
+  const hasConsonant = !!pinyin.consonant;
+  const hasTone = !!pinyin.tone;
 
-    // 子音のみ
-  } else if (!hasVowels && hasConsonants && !hasTone) {
-    group = '子音+母音';
-    limit = 5;
-    const { data, error } = await supabase.rpc('get_hanzis_by_consonants', {
-      _limit: limit,
-      _consonants: filter.consonants,
-    });
+  if (hasConsonant && hasVowel && !hasTone) {
+    const { data, error } = await supabase
+      .from('hanzis')
+      .select('*')
+      .eq('consonant', pinyin.consonant)
+      .eq('vowel', pinyin.vowel);
+
     if (error) {
       return { error: error.message };
     }
-    hanzis_raw = data;
-    // 子音と母音
-  } else if (hasConsonants && hasVowels && !hasTone) {
-    group = '母音';
-    limit = 20;
-    const { data, error } = await supabase.rpc(
-      'get_hanzis_by_consonants_vowels',
-      {
-        _limit: limit,
-        _vowels: filter.vowels,
-        _consonants: filter.consonants,
-      }
-    );
+    hanzis_raw = data || [];
+  } else if (!hasConsonant && hasVowel && hasTone) {
+    const vowels = [pinyin.vowel, `w${pinyin.vowel}`, `y${pinyin.vowel}`];
+
+    const { data, error } = await supabase
+      .from('hanzis')
+      .select('*')
+      .in('vowel', vowels)
+      .eq('tone', pinyin.tone);
+
     if (error) {
       return { error: error.message };
     }
-    hanzis_raw = data;
-    // 母音と声調
-  } else if (!hasConsonants && hasVowels && hasTone) {
-    group = '子音';
-    limit = 10;
-    if (filter.vowels.length !== 1) {
-      throw new Error(`pinyin filter has ${filter.vowels.length} vowels.`);
-    }
-    const { data, error } = await supabase.rpc('get_hanzis_by_vowel_tone', {
-      _limit: 10,
-      _vowel: filter.vowels[0],
-      _tone: filter.tone,
-    });
-    if (error) {
-      return { error: error.message };
-    }
-    hanzis_raw = data;
-    // 子音と母音と声調
-  } else if (hasConsonants && hasVowels && hasTone) {
-    group = '子音';
-    limit = 20;
-    if (filter.vowels.length !== 1) {
-      throw new Error(`pinyin filter has ${filter.vowels.length} vowels.`);
-    }
-    const { data, error } = await supabase.rpc(
-      'get_hanzis_by_consonants_vowel_tone',
-      {
-        _limit: limit,
-        _consonants: filter.consonants,
-        _vowel: filter.vowels[0],
-        _tone: filter.tone,
-      }
-    );
-    if (error) {
-      return { error: error.message };
-    }
-    hanzis_raw = data;
+    hanzis_raw = data || [];
   }
 
   return {
@@ -103,8 +47,6 @@ export const getHanzisByPinyinFilter = async (
         ...h,
         createdAt: new Date(h.created_at),
       })),
-      limit,
-      group,
     },
   };
 };

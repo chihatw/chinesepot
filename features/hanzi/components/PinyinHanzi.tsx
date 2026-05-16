@@ -1,4 +1,4 @@
-import { buildPinyin } from '@/features/pinyin/services/utils';
+import { parsePinyinInput } from '@/features/pinyin/services/utils';
 import { fontPinyin } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
 import { buildToneMark } from '../services/utils';
@@ -13,7 +13,7 @@ const PinyinHanzi = ({
 
   count?: number;
 }) => {
-  const pinyin = buildPinyin(pinyinStr);
+  const pinyin = parsePinyinInput(pinyinStr);
   const mark = buildToneMark(pinyin.tone);
 
   return (
@@ -23,7 +23,7 @@ const PinyinHanzi = ({
           className={cn(
             fontPinyin.className,
             'absolute text-red-600',
-            mark === '•' ? '-top-3' : '-top-2'
+            mark === '•' ? '-top-3' : '-top-2',
           )}
         >
           {mark}

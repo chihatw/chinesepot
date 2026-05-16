@@ -1,10 +1,11 @@
+export const INITIAL_PINYIN: Pinyin = {
+  consonant: '',
+  vowel: '',
+  tone: '',
+};
+
 export interface Pinyin {
-  vowel: string;
   consonant: string;
-  tone: string;
-}
-export interface PinyinFilter {
-  vowels: string[];
-  consonants: string[];
+  vowel: string;
   tone: string;
 }

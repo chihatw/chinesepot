@@ -3,11 +3,8 @@
 import useDebouce from '@/hooks/useDebounce';
 
 import PinyinBadge from '@/features/pinyin/components/PinyinBadge';
-import { Pinyin, PinyinFilter } from '@/features/pinyin/schema';
-import {
-  buildPinyin,
-  buildPinyinFilter,
-} from '@/features/pinyin/services/utils';
+import { INITIAL_PINYIN, Pinyin } from '@/features/pinyin/schema';
+import { parsePinyinInput } from '@/features/pinyin/services/utils';
 import { buttonPrimary, inputStyle } from '@/lib/styles';
 import { Loader2 } from 'lucide-react';
 import { useEffect, useMemo, useState, useTransition } from 'react';
@@ -19,18 +16,6 @@ type Props = {
   form: string;
   articleId: number;
   closeDialog: () => void;
-};
-
-const INITIAL_PINYIN: Pinyin = {
-  vowel: '',
-  consonant: '',
-  tone: '',
-};
-
-const INITIAL_FILTER: PinyinFilter = {
-  vowels: [],
-  consonants: [],
-  tone: '',
 };
 
 const hasPinyin = (pinyin: Pinyin) => {
@@ -50,7 +35,6 @@ const buildPinyinText = (pinyin: Pinyin) => {
 const HanziForm = ({ form, articleId, closeDialog }: Props) => {
   const [input, setInput] = useState('');
   const [pinyin, setPinyin] = useState<Pinyin>(INITIAL_PINYIN);
-  const [filter, setFilter] = useState<PinyinFilter>(INITIAL_FILTER);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   const [error, setError] = useState('');
 
@@ -63,17 +47,14 @@ const HanziForm = ({ form, articleId, closeDialog }: Props) => {
   useEffect(() => {
     if (!debouncedInput) {
       setPinyin(INITIAL_PINYIN);
-      setFilter(INITIAL_FILTER);
       setIsSubmitDisabled(false);
       setError('');
       return;
     }
 
-    const nextPinyin = buildPinyin(debouncedInput);
-    const nextFilter = buildPinyinFilter(debouncedInput);
+    const nextPinyin = parsePinyinInput(debouncedInput);
 
     setPinyin(nextPinyin);
-    setFilter(nextFilter);
     setIsSubmitDisabled(isIncompletePinyin(nextPinyin));
     setError('');
   }, [debouncedInput]);
@@ -119,7 +100,7 @@ const HanziForm = ({ form, articleId, closeDialog }: Props) => {
 
       {error ? <span className='text-red-500'>{error}</span> : null}
 
-      <HanziList pinyinFilter={filter} />
+      <HanziList pinyin={pinyin} />
     </div>
   );
 };
