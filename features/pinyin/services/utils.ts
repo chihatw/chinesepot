@@ -1,7 +1,6 @@
 import {
   ONE_CHAR_CONSONANTS,
   TWO_CHAR_CONSONANTS,
-  consonants_grouped_by_head_char,
 } from '../constants/consonants';
 import { TONES } from '../constants/tones';
 import { vowels_grouped_by_chars } from '../constants/vowelfilter';
@@ -96,7 +95,7 @@ const getShortestVowel = (vowels: string[]) => {
 const getVowelsByConsonants = (
   value_omitted_tone: string,
   consonants: string[],
-  hasTone: boolean
+  hasTone: boolean,
 ) => {
   let target = '';
   let vowels: string[] = [];
@@ -139,32 +138,44 @@ const getConsonant = (value: string) => {
 };
 
 /**
- * 声調が含まれない文字列から子音の候補を返す
+ * 声調が含まれない文字列から子音候補を返す
  */
-const getConsonants = (value_omitted_tone: string, hasTone: boolean) => {
-  /**
-   * 頭 2文字が子音の場合
-   */
-  const headTwo = value_omitted_tone.slice(0, 2);
-  if (['zh', 'ch', 'sh'].includes(headTwo)) {
-    return [headTwo];
+const getConsonants = (value: string, hasTone: boolean) => {
+  // zh/ch/sh が完成している
+  const twoChar = value.slice(0, 2);
+
+  if (TWO_CHAR_CONSONANTS.includes(twoChar)) {
+    return [twoChar];
   }
 
-  /**
-   * 頭 2文字が子音ではない場合
-   */
-  // 頭 1文字から、子音候補を抽出　s -> s, sh, k -> k
-  const headChar = value_omitted_tone.at(0)!;
-  const consonants = consonants_grouped_by_head_char[headChar] || [];
+  const head = value[0];
 
-  return consonants.filter((c) => {
-    const hasVowel = value_omitted_tone.length > 1;
-    // 母音か声調がすでに入力されている場合、2文字子音の可能性はない
-    if (hasVowel || hasTone) {
-      return c.length === 1;
-    }
-    return true;
-  });
+  if (!head) {
+    return [];
+  }
+
+  // 母音や声調が入力済みなら
+  // 1文字子音のみ許可
+  if (value.length > 1 || hasTone) {
+    return ONE_CHAR_CONSONANTS.includes(head) ? [head] : [];
+  }
+
+  // z -> z, zh
+  // c -> c, ch
+  // s -> s, sh
+  if (head === 'z') {
+    return ['z', 'zh'];
+  }
+
+  if (head === 'c') {
+    return ['c', 'ch'];
+  }
+
+  if (head === 's') {
+    return ['s', 'sh'];
+  }
+
+  return ONE_CHAR_CONSONANTS.includes(head) ? [head] : [];
 };
 
 const getVowel = (value: string): string => {
