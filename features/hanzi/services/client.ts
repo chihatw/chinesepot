@@ -17,7 +17,19 @@ export const getHanzisByPinyin = async (
   const hasConsonant = !!pinyin.consonant || isZeroConsonant;
   const hasTone = !!pinyin.tone;
 
-  if (hasConsonant && hasVowel && !hasTone) {
+  if (hasConsonant && hasVowel && hasTone) {
+    const { data, error } = await supabase
+      .from('hanzis')
+      .select('*')
+      .eq('consonant', pinyin.consonant)
+      .eq('vowel', pinyin.vowel)
+      .eq('tone', pinyin.tone);
+
+    if (error) {
+      return { error: error.message };
+    }
+    hanzis_raw = data || [];
+  } else if (hasConsonant && hasVowel && !hasTone) {
     const { data, error } = await supabase
       .from('hanzis')
       .select('*')
