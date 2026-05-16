@@ -4,6 +4,7 @@ import { createClient } from '@/utils/supabase/client';
 
 export const getHanzisByPinyin = async (
   pinyin: Pinyin,
+  isZeroConsonant: boolean,
 ): Promise<{
   data?: { hanzis: Hanzi[] };
   error?: string;
@@ -12,7 +13,7 @@ export const getHanzisByPinyin = async (
   const supabase = createClient();
 
   const hasVowel = !!pinyin.vowel;
-  const hasConsonant = !!pinyin.consonant;
+  const hasConsonant = !!pinyin.consonant || isZeroConsonant;
   const hasTone = !!pinyin.tone;
 
   if (hasConsonant && hasVowel && !hasTone) {

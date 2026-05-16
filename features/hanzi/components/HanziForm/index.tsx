@@ -35,6 +35,7 @@ const buildPinyinText = (pinyin: Pinyin) => {
 const HanziForm = ({ form, articleId, closeDialog }: Props) => {
   const [input, setInput] = useState('');
   const [pinyin, setPinyin] = useState<Pinyin>(INITIAL_PINYIN);
+  const [isZeroConsonant, setIsZeroConsonant] = useState(false);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
   const [error, setError] = useState('');
 
@@ -47,14 +48,20 @@ const HanziForm = ({ form, articleId, closeDialog }: Props) => {
   useEffect(() => {
     if (!debouncedInput) {
       setPinyin(INITIAL_PINYIN);
+      setIsZeroConsonant(false);
       setIsSubmitDisabled(false);
       setError('');
       return;
     }
 
-    const nextPinyin = parsePinyinInput(debouncedInput);
+    const nextIsZeroConsonant = debouncedInput.trim().startsWith('0');
+    const nextPinyinInput = nextIsZeroConsonant
+      ? debouncedInput.trim().slice(1)
+      : debouncedInput;
+    const nextPinyin = parsePinyinInput(nextPinyinInput);
 
     setPinyin(nextPinyin);
+    setIsZeroConsonant(nextIsZeroConsonant);
     setIsSubmitDisabled(isIncompletePinyin(nextPinyin));
     setError('');
   }, [debouncedInput]);
@@ -100,7 +107,7 @@ const HanziForm = ({ form, articleId, closeDialog }: Props) => {
 
       {error ? <span className='text-red-500'>{error}</span> : null}
 
-      <HanziList pinyin={pinyin} />
+      <HanziList pinyin={pinyin} isZeroConsonant={isZeroConsonant} />
     </div>
   );
 };

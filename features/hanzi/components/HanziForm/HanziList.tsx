@@ -10,20 +10,29 @@ import { parsePinyinInput } from '@/features/pinyin/services/utils';
 import { useEffect, useState } from 'react';
 import PinyinHanzi from '../PinyinHanzi';
 
-const HanziList = ({ pinyin }: { pinyin: Pinyin }) => {
+const HanziList = ({
+  pinyin,
+  isZeroConsonant,
+}: {
+  pinyin: Pinyin;
+  isZeroConsonant: boolean;
+}) => {
   const [hanzis, setHanzis] = useState<Hanzi[]>([]);
   const [error, setError] = useState<string>();
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data, error } = await getHanzisByPinyin(pinyin);
+      const { data, error } = await getHanzisByPinyin(
+        pinyin,
+        isZeroConsonant,
+      );
 
       setHanzis(data?.hanzis || []);
       setError(error);
     };
 
     fetchData();
-  }, [pinyin]);
+  }, [pinyin, isZeroConsonant]);
 
   const items = buildHanziGroups(hanzis);
 
