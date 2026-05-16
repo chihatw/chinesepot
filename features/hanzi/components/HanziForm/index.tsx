@@ -10,72 +10,87 @@ import {
 } from '@/features/pinyin/services/utils';
 import { buttonPrimary, inputStyle } from '@/lib/styles';
 import { Loader2 } from 'lucide-react';
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import { addHanzi } from '../../actions';
 import PinyinHanzi from '../PinyinHanzi';
 import HanziList from './HanziList';
 
 type Props = {
-  pinyin: Pinyin;
-  filter: PinyinFilter;
-  disabled: boolean;
-  error: string;
-};
-
-const INITIAL_STATE: Props = {
-  pinyin: {
-    vowel: '',
-    consonant: '',
-    tone: '',
-  },
-  filter: {
-    vowels: [],
-    consonants: [],
-    tone: '',
-  },
-  disabled: false,
-  error: '',
-};
-
-const HanziForm = ({
-  form,
-  articleId,
-  closeDialog,
-}: {
   form: string;
   articleId: number;
   closeDialog: () => void;
-}) => {
+};
+
+const INITIAL_PINYIN: Pinyin = {
+  vowel: '',
+  consonant: '',
+  tone: '',
+};
+
+const INITIAL_FILTER: PinyinFilter = {
+  vowels: [],
+  consonants: [],
+  tone: '',
+};
+
+const hasPinyin = (pinyin: Pinyin) => {
+  return Boolean(pinyin.consonant + pinyin.vowel + pinyin.tone);
+};
+
+const isIncompletePinyin = (pinyin: Pinyin) => {
+  if (!hasPinyin(pinyin)) return false;
+
+  return !pinyin.vowel || !pinyin.tone;
+};
+
+const buildPinyinText = (pinyin: Pinyin) => {
+  return pinyin.consonant + pinyin.vowel + pinyin.tone;
+};
+
+const HanziForm = ({ form, articleId, closeDialog }: Props) => {
   const [input, setInput] = useState('');
+  const [pinyin, setPinyin] = useState<Pinyin>(INITIAL_PINYIN);
+  const [filter, setFilter] = useState<PinyinFilter>(INITIAL_FILTER);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
+  const [error, setError] = useState('');
+
   const debouncedInput = useDebouce(input, 300);
-  const [value, setValue] = useState<Props>(INITIAL_STATE);
   const [isPending, startTransition] = useTransition();
+
+  const pinyinText = useMemo(() => buildPinyinText(pinyin), [pinyin]);
+  const submitLabel = pinyinText ? '登錄' : '記号';
 
   useEffect(() => {
     if (!debouncedInput) {
-      setValue(INITIAL_STATE);
+      setPinyin(INITIAL_PINYIN);
+      setFilter(INITIAL_FILTER);
+      setIsSubmitDisabled(false);
+      setError('');
       return;
     }
-    const pinyin = buildPinyin(debouncedInput);
-    const filter = buildPinyinFilter(debouncedInput);
-    const disabled = !(pinyin.consonant + pinyin.vowel + pinyin.tone)
-      ? false // pinyin が空文字の場合、登録可能
-      : !pinyin.tone || !pinyin.vowel; // pinyin に文字が入っている場合、tone と vowel は必須
 
-    setValue({ pinyin, filter, disabled, error: '' });
+    const nextPinyin = buildPinyin(debouncedInput);
+    const nextFilter = buildPinyinFilter(debouncedInput);
+
+    setPinyin(nextPinyin);
+    setFilter(nextFilter);
+    setIsSubmitDisabled(isIncompletePinyin(nextPinyin));
+    setError('');
   }, [debouncedInput]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     startTransition(async () => {
-      const { error } = await addHanzi({ ...value.pinyin, form }, articleId);
-      if (error) {
-        setValue((prev) => ({ ...prev, error }));
+      const result = await addHanzi({ ...pinyin, form }, articleId);
+
+      if (result.error) {
+        setError(result.error);
         return;
       }
-      // エラーがなければ、Dialog を閉じる
+
       closeDialog();
     });
   };
+
   return (
     <div className='grid h-[calc(100vh-200px)] grid-rows-[auto_auto_auto_auto_1fr] space-y-4'>
       <div className='grid grid-cols-[120px_150px_1fr_auto] items-center gap-2'>
@@ -85,28 +100,26 @@ const HanziForm = ({
           onChange={(e) => setInput(e.target.value)}
           placeholder='拼音'
         />
+
         <div className='flex flex-col items-center gap-2'>
-          <PinyinBadge pinyin={value.pinyin} />
-          <PinyinHanzi
-            pinyinStr={
-              value.pinyin.consonant + value.pinyin.vowel + value.pinyin.tone
-            }
-            form={form}
-          />
+          <PinyinBadge pinyin={pinyin} />
+
+          <PinyinHanzi pinyinStr={pinyinText} form={form} />
         </div>
+
         <button
           className={buttonPrimary}
-          disabled={value.disabled || isPending}
+          disabled={isSubmitDisabled || isPending}
           onClick={handleSubmit}
         >
-          {!!(value.pinyin.consonant + value.pinyin.vowel + value.pinyin.tone)
-            ? '登錄'
-            : '記号'}
+          {submitLabel}
           {isPending ? <Loader2 className='animate-spin' /> : null}
         </button>
       </div>
-      {value.error ? <span className='text-red-500'>{value.error}</span> : null}
-      <HanziList pinyinFilter={value.filter} />
+
+      {error ? <span className='text-red-500'>{error}</span> : null}
+
+      <HanziList pinyinFilter={filter} />
     </div>
   );
 };
