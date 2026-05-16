@@ -46,6 +46,22 @@ export function buildHanziGroups(hanzis: Hanzi[]) {
   return items;
 }
 
+export function buildHanziGroupsByTones(hanzis: Hanzi[]) {
+  const items: { vowel: string; consonant: string; hanzis: Hanzi[] }[] = [];
+  const tones = ['1', '2', '3', '4', '0'];
+
+  for (const tone of tones) {
+    const filtered = hanzis.filter((h) => h.tone === tone);
+
+    if (!!filtered.length) {
+      const [{ vowel, consonant }] = filtered;
+      items.push({ vowel, consonant, hanzis: filtered });
+    }
+  }
+
+  return items;
+}
+
 function getVowelCounts(hanzis: Hanzi[]) {
   return hanzis.reduce((acc, cur) => {
     let vowel = cur.vowel;

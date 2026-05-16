@@ -2,7 +2,10 @@
 
 import { Hanzi } from '@/features/hanzi/schema';
 import { getHanzisByPinyin } from '@/features/hanzi/services/client';
-import { buildHanziGroups } from '@/features/hanzi/services/utils';
+import {
+  buildHanziGroups,
+  buildHanziGroupsByTones,
+} from '@/features/hanzi/services/utils';
 
 import PinyinBadge from '@/features/pinyin/components/PinyinBadge';
 import { Pinyin } from '@/features/pinyin/schema';
@@ -22,10 +25,7 @@ const HanziList = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data, error } = await getHanzisByPinyin(
-        pinyin,
-        isZeroConsonant,
-      );
+      const { data, error } = await getHanzisByPinyin(pinyin, isZeroConsonant);
 
       setHanzis(data?.hanzis || []);
       setError(error);
@@ -34,13 +34,17 @@ const HanziList = ({
     fetchData();
   }, [pinyin, isZeroConsonant]);
 
-  const items = buildHanziGroups(hanzis);
+  const items = pinyin.tone
+    ? buildHanziGroups(hanzis)
+    : buildHanziGroupsByTones(hanzis);
 
   // グループに含まれる hanzi が多い順に並べる
-  const orderedItems = items.sort((a, b) => b.hanzis.length - a.hanzis.length);
+  const orderedItems = pinyin.tone
+    ? items.sort((a, b) => b.hanzis.length - a.hanzis.length)
+    : items;
 
   return (
-    <div className='space-y-4 overflow-y-scroll'>
+    <div className='space-y-4 overflow-y-scroll pt-2 '>
       {error ? <div className='text-xs text-red-500'>{error}</div> : null}
 
       {orderedItems.map((item, index) => {
@@ -52,7 +56,7 @@ const HanziList = ({
         return (
           <div
             key={index}
-            className='grid grid-cols-[60px_1fr] items-center gap-2'
+            className='grid grid-cols-[60px_1fr] items-center gap-2 '
           >
             <div className='flex'>
               <PinyinBadge
