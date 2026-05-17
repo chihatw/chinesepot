@@ -11,18 +11,19 @@
     "typewatch": "tsc --noEmit --watch"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.10.3",
     "date-fns": "^4.1.0",
     "lucide-react": "^1.14.0",
     "nanoid": "^5.1.11",
     "next": "^16.2.6",
     "nextjs-toploader": "^3.9.17",
+    "pg": "^8.20.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.0",
     "@types/node": "^22.19.18",
+    "@types/pg": "^8.20.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "eslint": "^10.3.0",

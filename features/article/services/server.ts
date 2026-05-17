@@ -1,21 +1,12 @@
 import { SentenceView } from '@/features/sentence/schema';
 
-import { createClient } from '@/utils/supabase/server';
+import { query } from '@/utils/db';
 import { Article } from '../schema';
 
 export async function fetchArticle(id: number): Promise<Article | undefined> {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from('articles')
-    .select()
-    .eq('id', id)
-    .single();
-
-  if (error) {
-    console.error(error.message);
-    return;
-  }
+  const res = await query('SELECT * FROM articles WHERE id = $1 LIMIT 1', [id]);
+  const data = res.rows[0];
+  if (!data) return;
   return {
     ...data,
     date: new Date(data.date),
@@ -24,40 +15,24 @@ export async function fetchArticle(id: number): Promise<Article | undefined> {
 }
 
 export async function fetchSentences(
-  articleId: number
+  articleId: number,
 ): Promise<SentenceView[]> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from('article_sentence_text_pinyins')
-    .select()
-    .eq('id', articleId)
-    .order('index');
-
-  if (error) {
-    console.error(error.message);
-    return [];
-  }
-  return data.map((item) => ({
+  const res = await query(
+    'SELECT * FROM article_sentence_text_pinyins WHERE id = $1 ORDER BY "index"',
+    [articleId],
+  );
+  return res.rows.map((item: any) => ({
     ...item,
-    created_at: new Date(item.created_at!),
-    date: new Date(item.date!),
+    created_at: new Date(item.created_at),
+    date: new Date(item.date),
   }));
 }
 
 export async function fetchLatestSentences(): Promise<SentenceView[]> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from('article_sentence_text_pinyins_latest')
-    .select();
-
-  if (error) {
-    console.error(error.message);
-    return [];
-  }
-
-  return data.map((item) => ({
+  const res = await query('SELECT * FROM article_sentence_text_pinyins_latest');
+  return res.rows.map((item: any) => ({
     ...item,
-    created_at: new Date(item.created_at!),
-    date: new Date(item.date!),
+    created_at: new Date(item.created_at),
+    date: new Date(item.date),
   }));
 }

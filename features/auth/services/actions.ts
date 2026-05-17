@@ -1,39 +1,42 @@
 'use server';
 
-import { createClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { PROJECT_URL } from '../constants';
 
-const isProduction = process.env.VERCEL_ENV === 'production';
-const url = (isProduction ? PROJECT_URL : 'http://127.0.0.1:3000') + '/welcome';
-// const url = (isProduction ? PROJECT_URL:'http://localhost:3000' ) + '/welcome';
+const AUTH_EMAIL = process.env.AUTH_EMAIL;
+const AUTH_PASSWORD = process.env.AUTH_PASSWORD;
 
 export async function signInWithMagicLink(email: string) {
-  const supabase = await createClient();
-  const result = await supabase.auth.signInWithOtp({
-    email,
-    options: { emailRedirectTo: url },
-  });
-  return result;
+  // magic link not supported in simple auth
+  return { error: 'not supported' };
 }
 
 export async function signInWithEmailAndPassword(
   email: string,
-  password: string
+  password: string,
 ) {
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-  if (error) {
-    return error.message;
+  if (!AUTH_EMAIL || !AUTH_PASSWORD) {
+    return 'server auth not configured';
   }
-  return;
+
+  if (email === AUTH_EMAIL && password === AUTH_PASSWORD) {
+    const cookieStore = await cookies();
+    cookieStore.set({
+      name: 'auth',
+      value: 'logged-in',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+    });
+    return;
+  }
+
+  return 'invalid credentials';
 }
 
 export async function logout() {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
+  const cookieStore = await cookies();
+  cookieStore.set({ name: 'auth', value: '', maxAge: 0, path: '/' });
   redirect('/login');
 }

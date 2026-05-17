@@ -1,24 +1,24 @@
 'use server';
 
-import { fetchHanziLatestSentenceCounts } from '@/features/hanzi/services/services';
 import { Hanzi_latest_sentence_count } from '@/features/hanzi/schema';
-import { createClient } from '@/utils/supabase/server';
+import { fetchHanziLatestSentenceCounts } from '@/features/hanzi/services/services';
+import { query } from '@/utils/db';
 import { revalidatePath } from 'next/cache';
 
 export const getHanziLatestSentenceCounts = async (
-  text: string
+  text: string,
 ): Promise<Hanzi_latest_sentence_count[]> => {
   return fetchHanziLatestSentenceCounts(text);
 };
 
 export const deleteSentence = async (
   _id: number,
-  articleId: number
+  articleId: number,
 ): Promise<void> => {
-  const supabase = await createClient();
-  const { error } = await supabase.from('sentences').delete().eq('id', _id);
-  if (error) {
-    console.error(error.message);
+  try {
+    await query('DELETE FROM sentences WHERE id = $1', [_id]);
+  } catch (e) {
+    console.error(e);
     return;
   }
   revalidatePath('/');
@@ -30,18 +30,20 @@ export const deleteSentence = async (
 export const addSentence = async (
   _article_id: number,
   _hanzi_ids: number[],
-  _offsets: number[]
+  _offsets: number[],
 ): Promise<{ data?: number; error?: string }> => {
-  const supabase = await createClient();
-  const { data, error } = await supabase.rpc('insert_sentence', {
-    _article_id,
-    _hanzi_ids,
-    _offsets,
-  });
-  if (error) {
-    return { error: error.message };
+  try {
+    // call stored procedure insert_sentence
+    const res = await query('SELECT insert_sentence($1, $2, $3) as id', [
+      _article_id,
+      _hanzi_ids,
+      _offsets,
+    ]);
+    const data = res.rows[0]?.id;
+    revalidatePath('/');
+    revalidatePath(`/sentences?articleId=${_article_id}`);
+    return { data };
+  } catch (e: any) {
+    return { error: e.message };
   }
-  revalidatePath('/');
-  revalidatePath(`/sentences?articleId=${_article_id}`);
-  return { data };
 };

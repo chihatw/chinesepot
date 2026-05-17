@@ -1,19 +1,20 @@
 'use server';
 
-import { createClient } from '@/utils/supabase/server';
+import { query } from '@/utils/db';
 import { format } from 'date-fns';
 import { revalidatePath } from 'next/cache';
 import { Article, Article_db } from '../schema';
 
 export const addArticle = async (
-  article: Article_db
+  article: Article_db,
 ): Promise<{ error?: string }> => {
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from('articles')
-    .insert({ date: article.date, title: article.title });
-  if (error) {
-    return { error: error.message };
+  try {
+    await query('INSERT INTO articles (date, title) VALUES ($1, $2)', [
+      article.date,
+      article.title,
+    ]);
+  } catch (e: any) {
+    return { error: e.message };
   }
   revalidatePath('/');
   revalidatePath('/articles');
@@ -21,22 +22,19 @@ export const addArticle = async (
 };
 
 export const updateArticle = async (
-  article: Article
+  article: Article,
 ): Promise<{ error?: string }> => {
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from('articles')
-    .update({
-      title: article.title!,
-      date: format(
+  try {
+    await query('UPDATE articles SET title = $1, date = $2 WHERE id = $3', [
+      article.title!,
+      format(
         article.date!.toLocaleDateString('en-US', { timeZone: 'Asia/Tokyo' }),
-        'yyyy-MM-dd'
+        'yyyy-MM-dd',
       ),
-    })
-    .eq('id', article.id!);
-
-  if (error) {
-    return { error: error.message };
+      article.id!,
+    ]);
+  } catch (e: any) {
+    return { error: e.message };
   }
   revalidatePath('/');
   revalidatePath('/articles');
@@ -46,12 +44,12 @@ export const updateArticle = async (
 };
 
 export const deleteArticle = async (
-  _id: number
+  _id: number,
 ): Promise<{ error?: string }> => {
-  const supabase = await createClient();
-  const { error } = await supabase.from('articles').delete().eq('id', _id);
-  if (error) {
-    return { error: error.message };
+  try {
+    await query('DELETE FROM articles WHERE id = $1', [_id]);
+  } catch (e: any) {
+    return { error: e.message };
   }
   revalidatePath('/');
   revalidatePath('/articles');

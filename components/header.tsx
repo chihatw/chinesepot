@@ -3,18 +3,16 @@ import Link from 'next/link';
 import HeaderLogoutButton from '@/features/auth/components/HeaderLogoutButton';
 
 import { buttonGhost, buttonGhostIcon } from '@/lib/styles';
-import { createClient } from '@/utils/supabase/server';
 import { DoorClosed, Home } from 'lucide-react';
+import { cookies } from 'next/headers';
 
 const LINKS: { url: string; label: string }[] = [
   { url: '/articles', label: '文章一覧' },
 ];
 
 const Header = async () => {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const cookieStore = await cookies();
+  const user = cookieStore.get('auth') ? { email: 'user' } : null;
 
   return (
     <nav className='grid h-12 shadow-sm'>

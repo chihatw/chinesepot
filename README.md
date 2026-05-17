@@ -1,5 +1,7 @@
 # Restore
+
 Check dashboard > Settings > Database > Connection string
+
 ```shell
 psql \
 -h aws-0-ap-northeast-1.pooler.supabase.com \
@@ -11,11 +13,13 @@ psql \
 ```
 
 # Memo
+
 - `tsconfig.json`
   - `new Set()` を使うために `"target": "es6"` 追記
 
 - `next.config.mjs`
   - cache 状態を見るため
+
 ```js
 const nextConfig = {
   logging: {
@@ -25,3 +29,8 @@ const nextConfig = {
   },
 };
 ```
+
+# GitHub Copilot Usage
+
+- https://github.com/settings/copilot/features
+- https://github.com/settings/billing

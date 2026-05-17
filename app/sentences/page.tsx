@@ -1,10 +1,9 @@
-import { Article } from '@/features/article/schema';
 import { fetchSentences } from '@/features/article/services/server';
 import SentenceList from '@/features/sentence/components/SentenceList';
 import { buttonPrimary } from '@/lib/styles';
-import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 
+import { fetchArticle } from '@/features/article/services/server';
 import { redirect } from 'next/navigation';
 
 const Page = async (props: {
@@ -17,21 +16,8 @@ const Page = async (props: {
 
   if (!articleId) redirect('/articles');
 
-  const supabase = await createClient();
-
-  const { data } = await supabase
-    .from('article_sentence_text_pinyins')
-    .select('*')
-    .eq('id', articleId)
-    .order('index');
-
   const sentences = await fetchSentences(articleId);
-
-  if (!data || !data.length) {
-    redirect('/articles');
-  }
-
-  const article = data[0] as Article;
+  const article = await fetchArticle(articleId);
 
   if (!article || !article.id) {
     redirect('/articles');

@@ -1,7 +1,5 @@
 import { Hanzi, Hanzi_db_raw } from '@/features/hanzi/schema';
-import { VOWEL_PAIRS } from '@/features/pinyin/constants/vowels';
 import { Pinyin } from '@/features/pinyin/schema';
-import { createClient } from '@/utils/supabase/client';
 
 export const getHanzisByPinyin = async (
   pinyin: Pinyin,
@@ -10,64 +8,28 @@ export const getHanzisByPinyin = async (
   data?: { hanzis: Hanzi[] };
   error?: string;
 }> => {
-  let hanzis_raw: Hanzi_db_raw[] = [];
-  const supabase = createClient();
+  try {
+    const res = await fetch('/api/hanzis', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pinyin, isZeroConsonant }),
+    });
+    const json = await res.json();
 
-  const hasVowel = !!pinyin.vowel;
-  const hasConsonant = !!pinyin.consonant || isZeroConsonant;
-  const hasTone = !!pinyin.tone;
-
-  if (hasConsonant && hasVowel && hasTone) {
-    const { data, error } = await supabase
-      .from('hanzis')
-      .select('*')
-      .eq('consonant', pinyin.consonant)
-      .eq('vowel', pinyin.vowel)
-      .eq('tone', pinyin.tone);
-
-    if (error) {
-      return { error: error.message };
+    if (!res.ok) {
+      return { error: json.error || 'failed to fetch hanzis' };
     }
-    hanzis_raw = data || [];
-  } else if (hasConsonant && hasVowel && !hasTone) {
-    const { data, error } = await supabase
-      .from('hanzis')
-      .select('*')
-      .eq('consonant', pinyin.consonant)
-      .eq('vowel', pinyin.vowel);
 
-    if (error) {
-      return { error: error.message };
-    }
-    hanzis_raw = data || [];
-  } else if (!hasConsonant && hasVowel && hasTone) {
-    const vowels = [
-      ...new Set([
-        pinyin.vowel,
-        `w${pinyin.vowel}`,
-        `y${pinyin.vowel}`,
-        VOWEL_PAIRS[pinyin.vowel],
-      ].filter((vowel): vowel is string => !!vowel)),
-    ];
-
-    const { data, error } = await supabase
-      .from('hanzis')
-      .select('*')
-      .in('vowel', vowels)
-      .eq('tone', pinyin.tone);
-
-    if (error) {
-      return { error: error.message };
-    }
-    hanzis_raw = data || [];
+    const hanzis_raw: Hanzi_db_raw[] = json.data?.hanzis || [];
+    return {
+      data: {
+        hanzis: hanzis_raw.map((h) => ({
+          ...h,
+          createdAt: new Date(h.created_at),
+        })),
+      },
+    };
+  } catch (error: any) {
+    return { error: error.message || 'failed to fetch hanzis' };
   }
-
-  return {
-    data: {
-      hanzis: hanzis_raw.map((h) => ({
-        ...h,
-        createdAt: new Date(h.created_at),
-      })),
-    },
-  };
 };

@@ -7,12 +7,8 @@ import { logout } from '../services/actions';
 type Props = {};
 
 const HeaderLogoutButton = (props: Props) => {
-  const signOut = async () => {
-    logout();
-  };
-
   return (
-    <form action={signOut}>
+    <form action={logout}>
       <button className={buttonGhostIcon} type='submit'>
         <DoorOpen />
       </button>
