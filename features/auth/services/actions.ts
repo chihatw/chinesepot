@@ -6,11 +6,6 @@ import { redirect } from 'next/navigation';
 const AUTH_EMAIL = process.env.AUTH_EMAIL;
 const AUTH_PASSWORD = process.env.AUTH_PASSWORD;
 
-export async function signInWithMagicLink(email: string) {
-  // magic link not supported in simple auth
-  return { error: 'not supported' };
-}
-
 export async function signInWithEmailAndPassword(
   email: string,
   password: string,
