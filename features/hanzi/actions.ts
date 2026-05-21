@@ -14,7 +14,7 @@ export const addHanzi = async (
       [hanzi.form, hanzi.consonant, hanzi.vowel, hanzi.tone],
     );
     const id = res.rows[0]?.id;
-    revalidatePath(`/articles/${articleId}/form`);
+    revalidatePath(`/articles/${articleId}/sentences/new`);
     return { data: id };
   } catch (e: any) {
     if (e.code === '23505') {

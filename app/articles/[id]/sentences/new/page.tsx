@@ -5,12 +5,9 @@ import { buttonPrimary } from '@/lib/styles';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-const Page = async (props: {
-  searchParams: Promise<{ articleId?: string }>;
-}) => {
-  const searchParams = await props.searchParams;
-
-  const articleId = Number(searchParams.articleId);
+const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
+  const articleId = Number(id);
 
   if (!Number.isInteger(articleId)) redirect('/articles');
 
@@ -22,10 +19,7 @@ const Page = async (props: {
   return (
     <div className='mx-auto max-w-md grid gap-8 mb-20'>
       <div className='text-2xl font-bold'>{article.title}</div>
-      <Link
-        href={`/sentences?articleId=${article.id}`}
-        className={buttonPrimary}
-      >
+      <Link href={`/articles/${article.id}`} className={buttonPrimary}>
         Back to Article
       </Link>
       <SentenceForm articleId={article.id} />

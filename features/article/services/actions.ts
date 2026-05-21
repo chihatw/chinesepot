@@ -38,8 +38,8 @@ export const updateArticle = async (
   }
   revalidatePath('/');
   revalidatePath('/articles');
-  revalidatePath(`/sentences?articleId=${article.id}`);
-  revalidatePath(`/sentences/new?articleId=${article.id}`);
+  revalidatePath(`/articles/${article.id}`);
+  revalidatePath(`/articles/${article.id}/sentences/new`);
   return {};
 };
 

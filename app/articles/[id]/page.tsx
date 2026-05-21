@@ -1,20 +1,14 @@
-import { fetchSentences } from '@/features/article/services/server';
+import { fetchArticle, fetchSentences } from '@/features/article/services/server';
 import SentenceList from '@/features/sentence/components/SentenceList';
 import { buttonPrimary } from '@/lib/styles';
 import Link from 'next/link';
-
-import { fetchArticle } from '@/features/article/services/server';
 import { redirect } from 'next/navigation';
 
-const Page = async (props: {
-  params: Promise<{ id: number }>;
-  searchParams: Promise<{ articleId?: number }>;
-}) => {
-  const searchParams = await props.searchParams;
+const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
+  const articleId = Number(id);
 
-  const { articleId } = searchParams;
-
-  if (!articleId) redirect('/articles');
+  if (!Number.isInteger(articleId)) redirect('/articles');
 
   const sentences = await fetchSentences(articleId);
   const article = await fetchArticle(articleId);
@@ -32,7 +26,7 @@ const Page = async (props: {
         })}
       </div>
       <Link
-        href={`/sentences/new?articleId=${article.id}`}
+        href={`/articles/${article.id}/sentences/new`}
         className={buttonPrimary}
       >
         新規作成

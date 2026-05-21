@@ -1,16 +1,6 @@
-# Restore
+# DB
 
-Check dashboard > Settings > Database > Connection string
-
-```shell
-psql \
--h aws-0-ap-northeast-1.pooler.supabase.com \
--p 6543 \
--d postgres \
--U postgres.fclyvkyxokodkqipxorr \
--f backup.dump
-# Password for user postgres.fclyvkyxokodkqipxorr:
-```
+- supabase から neon に移行
 
 # Memo
 

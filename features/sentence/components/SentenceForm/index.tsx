@@ -84,7 +84,7 @@ const SentenceForm = ({
         return;
       }
       // エラーがなければ、リストに戻る
-      router.push(`/sentences?articleId=${articleId}`);
+      router.push(`/articles/${articleId}`);
     });
   };
 

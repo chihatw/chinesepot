@@ -22,8 +22,7 @@ export const deleteSentence = async (
     return;
   }
   revalidatePath('/');
-  revalidatePath(`/sentences?articleId=${articleId}`);
-  revalidatePath(`/articles/${articleId}/form`);
+  revalidatePath(`/articles/${articleId}`);
   return;
 };
 
@@ -41,7 +40,7 @@ export const addSentence = async (
     ]);
     const data = res.rows[0]?.id;
     revalidatePath('/');
-    revalidatePath(`/sentences?articleId=${_article_id}`);
+    revalidatePath(`/articles/${_article_id}`);
     return { data };
   } catch (e: any) {
     return { error: e.message };
