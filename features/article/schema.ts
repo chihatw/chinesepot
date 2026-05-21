@@ -1,7 +1,7 @@
 export interface Article {
   id: number | null;
   title: string | null;
-  date: Date | null;
+  date: string | null;
   created_at: Date | null;
 }
 

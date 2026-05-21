@@ -1,6 +1,5 @@
 'use client';
 
-import { format } from 'date-fns';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { SetStateAction, useState, useTransition } from 'react';
@@ -11,17 +10,25 @@ import { addArticle, updateArticle } from '../services/actions';
 
 interface FormValue {
   title: string;
-  date: Date;
+  date: string;
   isValid: boolean;
   error: string;
 }
+
+const getTodayString = () => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
 const ArticleForm = ({ article }: { article?: Article }) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [value, setValue] = useState<FormValue>({
     title: article?.title || '',
-    date: article ? new Date(article.date!) : new Date(),
+    date: article?.date || getTodayString(),
     isValid: !!article?.title,
     error: '',
   });
@@ -29,7 +36,7 @@ const ArticleForm = ({ article }: { article?: Article }) => {
   const add = () => {
     const article: Article_db = {
       title: value.title,
-      date: format(value.date, 'yyyy-MM-dd'),
+      date: value.date,
     };
 
     startTransition(async () => {
@@ -103,23 +110,16 @@ const DatePicker = ({
   value: FormValue;
   setValue: (value: SetStateAction<FormValue>) => void;
 }) => {
-  // input[type=date] は "YYYY-MM-DD"
-  const yyyyMmDd = format(value.date, 'yyyy-MM-dd');
-
   return (
     <input
       type='date'
       className={inputStyle}
-      value={yyyyMmDd}
+      value={value.date}
       onChange={(e) => {
         const v = e.target.value; // "YYYY-MM-DD"
         if (!v) return;
 
-        // ローカル日付として Date を作る（UTCズレ回避）
-        const [y, m, d] = v.split('-').map(Number);
-        const date = new Date(y, (m ?? 1) - 1, d ?? 1);
-
-        setValue((prev) => ({ ...prev, date, error: '' }));
+        setValue((prev) => ({ ...prev, date: v, error: '' }));
       }}
     />
   );

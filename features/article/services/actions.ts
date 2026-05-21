@@ -1,7 +1,6 @@
 'use server';
 
 import { query } from '@/utils/db';
-import { format } from 'date-fns';
 import { revalidatePath } from 'next/cache';
 import { Article, Article_db } from '../schema';
 
@@ -27,10 +26,7 @@ export const updateArticle = async (
   try {
     await query('UPDATE articles SET title = $1, date = $2 WHERE id = $3', [
       article.title!,
-      format(
-        article.date!.toLocaleDateString('en-US', { timeZone: 'Asia/Tokyo' }),
-        'yyyy-MM-dd',
-      ),
+      article.date!,
       article.id!,
     ]);
   } catch (e: any) {

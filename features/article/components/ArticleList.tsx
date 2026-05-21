@@ -7,6 +7,7 @@ import { useOptimistic } from 'react';
 
 import { Article } from '../schema';
 import { deleteArticle } from '../services/actions';
+import { formatArticleDate } from '../services/date';
 
 const ArticleList = ({ articles }: { articles: Article[] }) => {
   const [optimisticArticles, deleteOptimisticArticles] = useOptimistic<
@@ -27,11 +28,7 @@ const ArticleList = ({ articles }: { articles: Article[] }) => {
           className='space-y-2 rounded bg-white p-5 pt-3 shadow-sm'
         >
           <div className='space-x-1 text-sm font-extralight text-gray-500'>
-            <span>
-              {new Date(article.date!).toLocaleDateString('ja-JP', {
-                timeZone: 'Asia/Tokyo',
-              })}
-            </span>
+            <span>{formatArticleDate(article.date)}</span>
           </div>
           <div className='grid grid-cols-[1fr_auto_auto] items-center gap-2'>
             <Link href={`/articles/${article.id}`}>

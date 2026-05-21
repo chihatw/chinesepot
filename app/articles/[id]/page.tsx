@@ -1,4 +1,5 @@
 import { fetchArticle, fetchSentences } from '@/features/article/services/server';
+import { formatArticleDate } from '@/features/article/services/date';
 import SentenceList from '@/features/sentence/components/SentenceList';
 import { buttonPrimary } from '@/lib/styles';
 import Link from 'next/link';
@@ -20,11 +21,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   return (
     <div className='mx-auto max-w-md grid gap-4 mb-20'>
       <div className='text-2xl font-bold'>{article.title}</div>
-      <div>
-        {new Date(article.date!).toLocaleDateString('ja-JP', {
-          timeZone: 'Asia/Tokyo',
-        })}
-      </div>
+      <div>{formatArticleDate(article.date)}</div>
       <Link
         href={`/articles/${article.id}/sentences/new`}
         className={buttonPrimary}

@@ -6,7 +6,7 @@ export interface Sentence {
 
 export interface SentenceView {
   created_at: Date | null;
-  date: Date | null;
+  date: string | null;
   id: number | null;
   index: number | null;
   pinyin: string | null;

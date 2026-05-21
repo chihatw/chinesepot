@@ -1,5 +1,7 @@
 import pkg from 'pg';
-const { Pool } = pkg;
+const { Pool, types } = pkg;
+
+types.setTypeParser(1082, (value) => value);
 
 const connectionString = process.env.DATABASE_URL;
 
