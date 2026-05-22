@@ -1,4 +1,5 @@
 import Header from '@/components/header';
+import CalendarMonthPicker from '@/components/CalendarMonthPicker';
 import { Article } from '@/features/article/schema';
 import { buttonGhostSm } from '@/lib/styles';
 import { query } from '@/utils/db';
@@ -9,11 +10,12 @@ export const dynamic = 'force-dynamic';
 type CalendarArticle = Pick<Article, 'id' | 'title' | 'date'>;
 
 const TOKYO_TIME_ZONE = 'Asia/Tokyo';
+const MIN_YEAR = 2023;
+const MIN_MONTH = 1;
 
 const pad2 = (value: number) => value.toString().padStart(2, '0');
 
-const toMonthParam = (year: number, month: number) =>
-  `${year}-${pad2(month)}`;
+const toMonthParam = (year: number, month: number) => `${year}-${pad2(month)}`;
 
 const toDateString = (year: number, month: number, day: number) =>
   `${toMonthParam(year, month)}-${pad2(day)}`;
@@ -36,26 +38,59 @@ const getTodayParts = () => {
   };
 };
 
-const parseMonthParam = (monthParam: string | undefined) => {
+type CalendarSearchParams = {
+  month?: string;
+  year?: string;
+};
+
+const normalizeMonth = (
+  year: number,
+  month: number,
+  fallback: { year: number; month: number },
+) => {
+  if (
+    !Number.isInteger(year) ||
+    !Number.isInteger(month) ||
+    month < 1 ||
+    month > 12
+  ) {
+    return fallback;
+  }
+
+  const selectedIndex = year * 12 + month;
+  const minIndex = MIN_YEAR * 12 + MIN_MONTH;
+
+  if (selectedIndex < minIndex) {
+    return { year: MIN_YEAR, month: MIN_MONTH };
+  }
+
+  return { year, month };
+};
+
+const parseMonthParams = ({
+  month: monthParam,
+  year: yearParam,
+}: CalendarSearchParams) => {
   const today = getTodayParts();
+  const fallback = { year: today.year, month: today.month };
+
+  if (yearParam && monthParam) {
+    return normalizeMonth(Number(yearParam), Number(monthParam), fallback);
+  }
 
   if (!monthParam) {
-    return { year: today.year, month: today.month };
+    return fallback;
   }
 
   const match = monthParam.match(/^(\d{4})-(\d{2})$/);
   if (!match) {
-    return { year: today.year, month: today.month };
+    return fallback;
   }
 
   const year = Number(match[1]);
   const month = Number(match[2]);
 
-  if (month < 1 || month > 12) {
-    return { year: today.year, month: today.month };
-  }
-
-  return { year, month };
+  return normalizeMonth(year, month, fallback);
 };
 
 const shiftMonth = (year: number, month: number, diff: number) => {
@@ -95,19 +130,32 @@ const buildCalendarDays = (year: number, month: number) => {
   ];
 };
 
+const buildYearOptions = (todayYear: number) =>
+  Array.from(
+    { length: todayYear - MIN_YEAR + 1 },
+    (_, index) => MIN_YEAR + index,
+  );
+
+const buildMonthOptions = () =>
+  Array.from({ length: 12 }, (_, index) => index + 1);
+
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ month?: string }>;
+  searchParams: Promise<CalendarSearchParams>;
 }) {
-  const { month: monthParam } = await searchParams;
-  const { year, month } = parseMonthParam(monthParam);
+  const params = await searchParams;
+  const { year, month } = parseMonthParams(params);
   const today = getTodayParts();
   const articles = await fetchArticlesForMonth(year, month);
-  const articlesByDate = new Map(articles.map((article) => [article.date, article]));
+  const articlesByDate = new Map(
+    articles.map((article) => [article.date, article]),
+  );
   const calendarDays = buildCalendarDays(year, month);
   const prevMonth = shiftMonth(year, month, -1);
   const nextMonth = shiftMonth(year, month, 1);
+  const yearOptions = buildYearOptions(Math.max(today.year, year));
+  const monthOptions = buildMonthOptions();
 
   return (
     <div>
@@ -119,7 +167,7 @@ export default async function Home({
           </h1>
           <div className='flex items-center gap-2'>
             <Link
-              href={`/?month=${toMonthParam(prevMonth.year, prevMonth.month)}`}
+              href={`/?year=${prevMonth.year}&month=${pad2(prevMonth.month)}`}
               className={buttonGhostSm}
             >
               前月
@@ -128,11 +176,17 @@ export default async function Home({
               今月
             </Link>
             <Link
-              href={`/?month=${toMonthParam(nextMonth.year, nextMonth.month)}`}
+              href={`/?year=${nextMonth.year}&month=${pad2(nextMonth.month)}`}
               className={buttonGhostSm}
             >
               翌月
             </Link>
+            <CalendarMonthPicker
+              year={year}
+              month={month}
+              yearOptions={yearOptions}
+              monthOptions={monthOptions}
+            />
           </div>
         </div>
 
