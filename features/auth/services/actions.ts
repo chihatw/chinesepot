@@ -6,6 +6,8 @@ import { redirect } from 'next/navigation';
 const AUTH_EMAIL = process.env.AUTH_EMAIL;
 const AUTH_PASSWORD = process.env.AUTH_PASSWORD;
 
+const THIRTY_DAYS = 60 * 60 * 24 * 30;
+
 export async function signInWithEmailAndPassword(
   email: string,
   password: string,
@@ -23,6 +25,7 @@ export async function signInWithEmailAndPassword(
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
+      maxAge: THIRTY_DAYS,
     });
     return;
   }

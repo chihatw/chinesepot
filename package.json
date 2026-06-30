@@ -12,24 +12,24 @@
   },
   "dependencies": {
     "date-fns": "^4.4.0",
-    "lucide-react": "^1.18.0",
-    "nanoid": "^5.1.11",
+    "lucide-react": "^1.22.0",
+    "nanoid": "^5.1.16",
     "next": "^16.2.9",
     "nextjs-toploader": "^3.9.17",
-    "pg": "^8.21.0",
+    "pg": "^8.22.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.1",
-    "@types/node": "^22.19.21",
+    "@tailwindcss/postcss": "^4.3.2",
+    "@types/node": "^22.20.0",
     "@types/pg": "^8.20.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "eslint": "^10.5.0",
+    "eslint": "^10.6.0",
     "eslint-config-next": "^16.2.9",
-    "postcss": "^8.5.15",
-    "tailwindcss": "^4.3.1",
+    "postcss": "^8.5.16",
+    "tailwindcss": "^4.3.2",
     "typescript": "^6.0.3"
   }
 }
