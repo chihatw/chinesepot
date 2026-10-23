@@ -14,7 +14,7 @@
     "date-fns": "^4.4.0",
     "lucide-react": "^1.22.0",
     "nanoid": "^5.1.16",
-    "next": "^16.2.9",
+    "next": "^16.4.1",
     "nextjs-toploader": "^3.9.17",
     "pg": "^8.22.0",
     "react": "^19.2.7",
