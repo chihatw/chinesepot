@@ -1,6 +1,9 @@
 packages:
   - '.'
 
+allowBuilds:
+  unrs-resolver: true
+
 minimumReleaseAgeExclude:
   - brace-expansion@1.1.16
   - brace-expansion@1.1.17
